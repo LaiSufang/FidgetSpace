@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FidgetSpace.HomePage"
+             Title="Fidget Space">
+    <VerticalStackLayout HorizontalOptions="Center" Margin="0,30,0,0">
+        <!--game list-->
+        <!-- 1. Bubble Wrap Pop-->
+        <Grid RowDefinitions="*,*"
+              ColumnDefinitions="*, auto, *"
+              ColumnSpacing="20"
+              Margin="20">
+            <Image Grid.RowSpan="2" Source= "dotnet_bot.png" WidthRequest="100"/>
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Bubble Wrap Pop"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="Tap, pop, repeat"
+                   FontSize="Body"
+                   />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    x:Name="BtnBubbleWrapPlay"
+                    Clicked="BtnBubbleWrapPlay_Clicked"
+                    Text="Play"
+                    WidthRequest="80"
+                    HeightRequest="40"
+                    CornerRadius="20"/>
+        </Grid>
+        
+        <!--2. Connecting Dots-->
+        <Grid RowDefinitions="*,*"
+              ColumnDefinitions="*, auto, *"
+              ColumnSpacing="20"
+              Margin="20">
+            <Image Grid.RowSpan="2" Source= "dotnet_bot.png" WidthRequest="100"/>
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Connecting Dots"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="Match and clear"
+                   FontSize="Body"
+                   />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    x:Name="BtnConnectingDotsPlay"
+                    Clicked="BtnConnectingDotsPlay_Clicked"
+                    Text="Play"
+                    WidthRequest="80"
+                    HeightRequest="40"
+                    CornerRadius="20"/>
+        </Grid>
+        
+        <!--3. Red or Blue Pill-->
+        <Grid RowDefinitions="*,*"
+              ColumnDefinitions="*, auto, *"
+              ColumnSpacing="20"
+              Margin="20">
+            <Image Grid.RowSpan="2" Source= "dotnet_bot.png" WidthRequest="100"/>
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Red or Blue Pill"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="Choose your path"
+                   FontSize="Body"
+                   />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    x:Name="BtnRedBluePillPlay"
+                    Clicked="BtnRedBluePillPlay_Clicked"
+                    Text="Play"
+                    WidthRequest="80"
+                    HeightRequest="40"
+                    CornerRadius="20"/>
+        </Grid>
+
+    </VerticalStackLayout>
+</ContentPage>

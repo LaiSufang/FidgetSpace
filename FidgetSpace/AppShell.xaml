@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FidgetSpace.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FidgetSpace"
+    Shell.FlyoutBehavior="Disabled"
+    Title="FidgetSpace">
+
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate local:SignUpPage}"
+        Route="SignUpPage" />
+
+    <ShellContent
+    Title="Home"
+    ContentTemplate="{DataTemplate local:HomePage}"
+    Route="HomePage" />
+
+    <!--<TabBar>
+        <Tab Title="Home" Icon="dotnet_bot.png">
+            <ShellContent
+                Title="Home"
+                Route="HomePage"
+                ContentTemplate="{DataTemplate local:HomePage}" />
+        </Tab>
+
+        <Tab Title="Profile" Icon="dotnet_bot.png">
+            <ShellContent
+                Title="Profile"
+                Route="UserProfilePage"
+                ContentTemplate="{DataTemplate local:UserProfilePage}" />
+        </Tab>
+
+        <Tab Title="Settings" Icon="dotnet_bot.png">
+            <ShellContent
+                Title="Settings"
+                Route="SettingsPage"
+                ContentTemplate="{DataTemplate local:SettingsPage}" />
+        </Tab>
+        
+    </TabBar>-->
+
+</Shell>

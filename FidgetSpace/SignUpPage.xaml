@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FidgetSpace.SignUpPage"
+             Title="SignUpPage">
+    <VerticalStackLayout Spacing="20" Margin="20" >
+        <Image Source= "dotnet_bot.png" WidthRequest="200"/>
+        <Label 
+            Text="Please sign up here!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"
+            FontSize="Title"
+            FontAttributes="Bold"/>
+        <Grid RowDefinitions="*,*,*,*" RowSpacing="25" Padding="30">
+
+            <Entry x:Name="UserName"
+                    Placeholder="User Name"
+                    />
+            <Entry x:Name="Email"
+                   Grid.Row="1"
+                    Placeholder="Email"
+                    />
+            <Entry x:Name="Password"
+                   Grid.Row="2"
+                    Placeholder="Password"
+                    IsPassword="True"
+                    />
+            <Entry x:Name="ConfirmPassword"
+                   Grid.Row="3"
+                    Placeholder="Confirm Password"
+                    IsPassword="True"
+                    />
+        </Grid>
+        <Button x:Name="BtnSignUp" 
+                Text="Sign Up" 
+                WidthRequest="310"
+                HeightRequest="60"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                CornerRadius="20"
+                Clicked ="BtnSignUp_Clicked"/>
+
+        <Button x:Name="BtnSkip" 
+        Text="Skip and Play" 
+        WidthRequest="310"
+        HeightRequest="60"
+        FontAttributes="Bold"
+        FontSize="Medium"
+        CornerRadius="20"
+        Clicked ="BtnSkip_Clicked"/>
+
+    </VerticalStackLayout>
+</ContentPage>
