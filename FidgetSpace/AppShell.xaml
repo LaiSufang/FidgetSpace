@@ -7,10 +7,10 @@
     Shell.FlyoutBehavior="Disabled"
     Title="FidgetSpace">
 
-    <ShellContent
+    <!-- <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:SignUpPage}"
-        Route="SignUpPage" />
+        Route="SignUpPage" /> -->
 
     <ShellContent
     Title="Home"

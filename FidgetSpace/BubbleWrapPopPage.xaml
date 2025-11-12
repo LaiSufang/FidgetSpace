@@ -4,14 +4,28 @@
              x:Class="FidgetSpace.BubbleWrapPopPage"
              Title="BubbleWrapPopPage"
              >
+    <VerticalStackLayout>
+        <Label x:Name="ScoreLbl"
+               FontSize="32"
+               HorizontalOptions="Center"
+               Margin="0,20,0,10"/>
+        <Label Text="Pop the bubbles by tapping on them."
+               FontSize="18"
+               HorizontalOptions="Center"
+               Margin="0,0,0,20"/>
+        <Grid x:Name="GameBoard"
+              Margin="10" />
+    </VerticalStackLayout>
 
+
+    <!--TODO: create a collection of ellipse instead of hard code each one?
     <Grid RowDefinitions="auto,*,*,*,*,*,*"
          ColumnDefinitions="*,*,*,*"
          HorizontalOptions="Center"
          RowSpacing="20"
          ColumnSpacing="20">
 
-        <!--TODO: create a collection of ellipse instead of hard code each one?-->
+        
 
         <Ellipse Grid.Row="1" Grid.Column="0"
                 HeightRequest="100"
@@ -52,5 +66,5 @@
         </Ellipse>
 
 
-    </Grid>
+    </Grid> -->
 </ContentPage>
