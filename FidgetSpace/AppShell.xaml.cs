@@ -13,6 +13,7 @@ namespace FidgetSpace
             Routing.RegisterRoute(nameof(BubbleWrapPopPage), typeof(BubbleWrapPopPage));
             Routing.RegisterRoute(nameof(ConnectingDotsPage), typeof(ConnectingDotsPage));
             Routing.RegisterRoute(nameof(RedBluePillPage), typeof(RedBluePillPage));
+            Routing.RegisterRoute(nameof(RedBluePillGamePage), typeof(RedBluePillGamePage));
             Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         }
 

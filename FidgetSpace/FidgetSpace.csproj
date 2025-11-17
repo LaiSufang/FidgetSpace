@@ -72,6 +72,9 @@
 	  <MauiXaml Update="HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="RedBluePillGamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="RedBluePillPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

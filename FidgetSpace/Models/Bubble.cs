@@ -42,7 +42,7 @@ class Bubble
         Button.Clicked += OnBubbleClicked;
     }
 
-    async public void OnBubbleClicked(object sender, EventArgs e)
+     public void OnBubbleClicked(object sender, EventArgs e)
     {
         Button button = (Button)sender;
         button.IsVisible = false;
