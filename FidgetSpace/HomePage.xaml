@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FidgetSpace.HomePage"
              Title="Fidget Space">
-    <VerticalStackLayout HorizontalOptions="Center" Margin="0,30,0,0">
+    <VerticalStackLayout HorizontalOptions="Center" Margin="0,30,0,5">
         <!--game list-->
         <!-- 1. Bubble Wrap Pop-->
         <Grid RowDefinitions="*,*"
