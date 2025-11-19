@@ -27,22 +27,14 @@ class Bubble
             WidthRequest = 60,         
             HeightRequest = 60,
             CornerRadius = 30,         
-            BackgroundColor = Colors.White,
-            ImageSource="tealbubble.png",
-            Text = string.Empty,        
-            Margin = 6,
-            Shadow = new Shadow
-            {
-                Brush = new SolidColorBrush(Colors.DarkSeaGreen),
-                Offset = new Point(3, 3),
-                Opacity = 0.3f,
-                Radius = 5
-            }
+            BackgroundColor = Colors.SeaGreen,
+            ImageSource = "whitemiddle.png",        
+            Margin = 6
         };
         Button.Clicked += OnBubbleClicked;
     }
 
-     public void OnBubbleClicked(object sender, EventArgs e)
+    public void OnBubbleClicked(object sender, EventArgs e)
     {
         Button button = (Button)sender;
         button.IsVisible = false;

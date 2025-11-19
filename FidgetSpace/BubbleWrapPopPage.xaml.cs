@@ -8,7 +8,7 @@ public partial class BubbleWrapPopPage : ContentPage
     private readonly int rows = 6;
     private readonly int columns = 4;
     private readonly int totalBubbles = 6;
-    private List<Bubble> bubbles = new List<Bubble>();
+    private List<BubbleUnit> bubbles = new List<BubbleUnit>();
 
     public BubbleWrapPopPage()
     {
@@ -43,9 +43,11 @@ public partial class BubbleWrapPopPage : ContentPage
         // Add Bubbles to random Grid blocks
         for (int i = 0; i < totalBubbles; i++)
         {
-            var bubble = new Bubble(columns, rows);
+            var bubble = new BubbleUnit(columns, rows);
             bubbles.Add(bubble);
-            bubble.Button.Clicked += OnBubbleClicked;
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += OnBubbleClicked;
+            bubble.Button.GestureRecognizers.Add(tap);
             GameBoard.Add(bubble.Button, bubble.x, bubble.y);
             Grid.SetColumn(bubble.Button, bubble.y);
             Grid.SetRow(bubble.Button, bubble.x);
