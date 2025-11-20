@@ -3,10 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FidgetSpace.RedBluePillGamePage"
              Title="RedBluePillGamePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+
+    <!--override the back button behavior-->
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior 
+                            Command="{Binding BackCommand}"
+                            IsEnabled="True"
+                            IsVisible="True"
+                            />
+    </Shell.BackButtonBehavior>
+
+    <!--game UI starts here-->
+    <VerticalStackLayout Margin="20" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+        
+        <!--gameboard: a grid of tappable color pills-->
+        <Grid x:Name="GameBoard" />
+
+        <!--game info / status: timer-->
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
+        <HorizontalStackLayout Spacing="100" Margin="20">
+            <Label x:Name="LbColor" Text="Target Pill: " />
+            <Label x:Name="LbTimer" Text="Timer: " />
+        </HorizontalStackLayout>
+        <!--<BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>-->
+        
     </VerticalStackLayout>
 </ContentPage>
