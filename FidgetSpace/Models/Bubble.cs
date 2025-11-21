@@ -21,7 +21,7 @@ class Bubble
         x = rng.Next(0, row);
         y = rng.Next(0, col);
 
-        // Reference: https://www.telerik.com/blogs/using-csharp-markup-create-graphical-interfaces-net-maui?
+        // Reference: https://www.telerik.com/blogs/using-csharp-markup-create-graphical-interfaces-net-maui
         Button = new Button
         {
             WidthRequest = 60,         
