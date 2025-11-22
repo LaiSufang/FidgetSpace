@@ -1,0 +1,175 @@
+using FidgetSpace.Models;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
+using System.Windows.Input;
+
+namespace FidgetSpace.Views
+{
+
+    // receive colorChoice via query parameter
+    [QueryProperty(nameof(ColorChoice), "colorChoice")]
+    public partial class RedBluePillGamePage : ContentPage
+    {
+        private int GridRows = 8;
+        private int GridColumns = 5;
+
+        private List<Ellipse> pills = new List<Ellipse>();
+        private Dictionary<Ellipse, (int Row, int Col)> pillPositions = new Dictionary<Ellipse, (int Row, int Col)>();
+        int totalPills = 0;
+        private Random ran = new Random();
+        public string? ColorChoice { get; set; }
+        public ICommand BackCommand => new Command(NavigateBack); // command to navigate back
+
+        // set target pill position based on color choice
+        private int targetRow = -1;
+        private int targetColumn = -1;
+
+        private async void NavigateBack()
+        {
+            await Shell.Current.GoToAsync(nameof(RedBluePillPage));
+        }
+
+        public RedBluePillGamePage()
+        {
+            InitializeComponent();
+            BindingContext = this;
+
+            // create game board rows and columns
+            for (int i = 0; i < GridRows; i++)
+            {
+                GameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            }
+            for (int j = 0; j < GridColumns; j++)
+            {
+                GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            }
+            GameBoard.RowSpacing = 10;
+            GameBoard.ColumnSpacing = 10;
+
+            // add ellipse to each grid cell (row+column)
+            for (int row = 0; row < GridRows; row++)
+            {
+                for (int col = 0; col < GridColumns; col++)
+                {
+                    var ellipse = new Ellipse
+                    {
+                        WidthRequest = 60,
+                        HeightRequest = 60,
+                        Fill = new SolidColorBrush(Colors.Green),
+                    };
+
+                    // add tap handler 
+                    var tap = new TapGestureRecognizer
+                    {
+                        Command = new Command(() => OnPillTapped(ellipse))
+                    };
+                    ellipse.GestureRecognizers.Add(tap);
+
+                    // keep track of pills and their positions
+                    pills.Add(ellipse);
+                    pillPositions[ellipse] = (row, col);
+                    totalPills++;
+
+                    // add ellipse to grid at specified row and column
+                    GameBoard.Add(ellipse, col, row);
+                }
+            }
+        }
+
+        // a function to generate random colors for the pills when tapped
+        private SolidColorBrush GetRandomColor()
+        {
+            var colorList = new List<Color>
+        {
+            Colors.MistyRose,
+            Colors.Purple,
+            Colors.Pink,
+            Colors.Orange,
+            Colors.Orchid,
+            Colors.Cyan,
+            Colors.Lime,
+            Colors.Magenta,
+            Colors.Turquoise,
+            Colors.Gold,
+            Colors.GreenYellow,
+            Colors.Lavender,
+        };
+            int index = ran.Next(colorList.Count);
+            return new SolidColorBrush(colorList[index]);
+        }
+
+        private void StartGame()
+        {
+            // reset the pills to default color
+            foreach (var pill in pills)
+            {
+                pill.Fill = new SolidColorBrush(Colors.Green);
+            }
+
+            // randomly select target pill position 
+            targetRow = ran.Next(0, GridRows);
+            targetColumn = ran.Next(0, GridColumns);
+        }
+        private async void OnPillTapped(Ellipse ellipse)
+        {
+
+            // Get the row and column for this ellipse
+            if (!pillPositions.TryGetValue(ellipse, out var pos))
+                return;
+
+            // Check if the tapped pill is the target pill based on color choice
+            if (ColorChoice == "Red" && (pos.Row == targetRow && pos.Col == targetColumn))
+            {
+                ellipse.Fill = Colors.Red;
+                bool playAgain = await DisplayAlert("Result", "You made the right choice! Play again?", "Yes", "No");
+                if (playAgain)
+                {
+                    NavigateBack();
+                }
+                else
+                {
+                    await Shell.Current.GoToAsync("///HomePage");
+                }
+
+            }
+            else if (ColorChoice == "Blue" && (pos.Row == targetRow && pos.Col == targetColumn))
+            {
+                ellipse.Fill = Colors.Blue;
+                bool playAgain = await DisplayAlert("Result", "You made the right choice! Play again?", "Yes", "No");
+                if (playAgain)
+                {
+                    NavigateBack();
+                }
+                else
+                {
+                    await Shell.Current.GoToAsync("///HomePage");
+                }
+            }
+            else
+            {
+                ellipse.Fill = GetRandomColor();
+                // when time runs out, display result: 
+
+                //await DisplayAlert("Result", "Accept the Truth! You’ve got a colorful world anyway.", "OK");
+            }
+            // prompt the player to play again or exit
+            //bool playAgain = await DisplayAlert("Play Again?", "Do you want to play again?", "Yes", "No");
+
+
+            // TODO: If the black pill is found, the game ends immediately and displays:“Oops! Life happens - you’re poisoned!” The player can choose to continue the next session or not. 
+
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            LbColor.Text += ColorChoice;
+
+            StartGame();
+
+            // TODO: Start a countdown timer of 10 seconds for the game session
+        }
+
+
+    }
+}

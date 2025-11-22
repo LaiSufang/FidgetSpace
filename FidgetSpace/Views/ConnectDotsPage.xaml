@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FidgetSpace.Views.ConnectDotsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
+    xmlns:models="clr-namespace:FidgetSpace.Models"
+    Title="Connect the Dots">
+
+    <!-- 这里直接在 XAML 里创建 ViewModel 作为 BindingContext -->
+    <ContentPage.BindingContext>
+        <vm:ConnectDotsViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="16" Spacing="10">
+
+        <!-- 顶部：显示剩余对数 + New 按钮 -->
+        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+            <Label Text="Remaining Pairs:"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+
+            <Label Grid.Column="1"
+                   Text="{Binding RemainingPairs}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start" />
+
+            <Button Grid.Column="2"
+                    Text="New"
+                    Command="{Binding NewGameCommand}" />
+        </Grid>
+
+        <!-- 游戏区域：用 CollectionView 显示所有点 -->
+        <CollectionView ItemsSource="{Binding Cells}"
+                        SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <!-- 一行多少个：这里和 ViewModel 里的 Cols 对应（6 列） -->
+                <GridItemsLayout Orientation="Vertical" Span="6" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <!-- 每一个 item 是一颗 ConnectDotsCell -->
+                <DataTemplate x:DataType="models:ConnectDotsCell">
+                    <Grid Padding="4">
+                        <Frame HeightRequest="46"
+                               WidthRequest="46"
+                               CornerRadius="23"
+                               HasShadow="False"
+                               BackgroundColor="{Binding ColorName}"
+                               IsVisible="{Binding IsVisible}">
+                            <!-- 点击一颗点，触发 ViewModel 的 TapCommand -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.TapCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+
+                            <Grid>
+                                <!-- 被选中的点：显示白色边框 -->
+                                <Frame BorderColor="White"
+                                    CornerRadius="23"
+                                    HasShadow="False"
+                                    Padding="0"
+                                    BackgroundColor="Transparent"
+                                    IsVisible="{Binding IsSelected}" />
+
+
+                                <!-- Power 点：中间画一个星星 -->
+                                <Label Text="X"
+                                       FontSize="16"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding IsPower}" />
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>
