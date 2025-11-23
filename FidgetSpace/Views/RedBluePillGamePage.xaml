@@ -21,9 +21,10 @@
 
         <!--game info / status: timer-->
         <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
-        <HorizontalStackLayout Spacing="100" Margin="20">
-            <Label x:Name="LbColor" Text="Target Pill: " />
-            <Label x:Name="LbTimer" Text="Timer: " />
+        <HorizontalStackLayout Spacing="10" Margin="20">
+            <Label x:Name="LbColor" Text="Target Pill:" />
+            <Ellipse x:Name="EpTarget" HeightRequest="20" WidthRequest="20" Fill="Blue"/>
+            <Label x:Name="LbTimer" Text="Timer: " Margin="50,0,0,0"/>
         </HorizontalStackLayout>
         <!--<BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>-->
         

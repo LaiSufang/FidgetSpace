@@ -29,12 +29,6 @@
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10" VerticalOptions="Center">
             <Ellipse x:Name="EpRed" HeightRequest="100" WidthRequest="100" Fill="Red">
-                <!--<Ellipse.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Offset="0.1" Color="Red"/>
-                        <GradientStop Offset="1.0" Color="LightPink"/>
-                    </RadialGradientBrush>
-                </Ellipse.Background>-->
                 <Ellipse.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Ellipse.GestureRecognizers>
@@ -46,13 +40,6 @@
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10" VerticalOptions="Center">
             <Ellipse x:Name="EpBlue" HeightRequest="100" WidthRequest="100" Fill="Blue">
-                <!--<Ellipse.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Offset="0.1" Color="Blue"/>
-                        <GradientStop Offset="1.0" Color="LightBlue"/>
-                    </RadialGradientBrush>
-                </Ellipse.Background>-->
-
                 <Ellipse.GestureRecognizers>
                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1"/>
                 </Ellipse.GestureRecognizers>
@@ -65,7 +52,7 @@
         <Frame x:Name="FrPillChoice" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
                BackgroundColor="AliceBlue" Margin="10" IsVisible="False">
             <Label x:Name="PillChoice"  
-               Padding="20" Text="" TextColor="Black" FontSize="Medium" />
+               Padding="20" Text="" TextColor="Black" FontSize="Body" />
         </Frame>
 
         <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"

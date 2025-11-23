@@ -1,4 +1,5 @@
 using FidgetSpace.Models;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using System.Windows.Input;
@@ -23,6 +24,10 @@ namespace FidgetSpace.Views
         // set target pill position based on color choice
         private int targetRow = -1;
         private int targetColumn = -1;
+
+        // black pill position
+        private int blackPillRow = -1;
+        private int blackPillColumn = -1;
 
         private async void NavigateBack()
         {
@@ -109,6 +114,14 @@ namespace FidgetSpace.Views
             // randomly select target pill position 
             targetRow = ran.Next(0, GridRows);
             targetColumn = ran.Next(0, GridColumns);
+
+            // randomly generate a black pill position that is not the target pill
+            do
+            {
+                blackPillRow = ran.Next(0, GridRows);
+                blackPillColumn = ran.Next(0, GridColumns);
+            } while (blackPillRow == targetRow && blackPillColumn == targetColumn);
+
         }
         private async void OnPillTapped(Ellipse ellipse)
         {
@@ -117,57 +130,75 @@ namespace FidgetSpace.Views
             if (!pillPositions.TryGetValue(ellipse, out var pos))
                 return;
 
-            // Check if the tapped pill is the target pill based on color choice
+            // Check if the tapped pill is the target pill or black pill based on color choice
             if (ColorChoice == "Red" && (pos.Row == targetRow && pos.Col == targetColumn))
             {
-                ellipse.Fill = Colors.Red;
-                bool playAgain = await DisplayAlert("Result", "You made the right choice! Play again?", "Yes", "No");
-                if (playAgain)
+                if (pos.Row == blackPillRow && pos.Col == blackPillColumn)
                 {
-                    NavigateBack();
-                }
-                else
-                {
+                    ellipse.Fill = Colors.Black;
+                    await DisplayAlert("The Black Pill?", "Oh… you weren’t supposed to find that. Game Over!!!", "OK");
                     await Shell.Current.GoToAsync("///HomePage");
+                    return;
+                }
+                else 
+                { 
+                    ellipse.Fill = Colors.Red;
+                    bool playAgain = await DisplayAlert("Your found it!", "Welcome to the real world...but this is only the beginning! Play again?", "Yes", "No");
+                    if (playAgain)
+                    {
+                        NavigateBack();
+                    }
+                    else
+                    {
+                        await Shell.Current.GoToAsync("///HomePage");
+                    }
                 }
 
             }
             else if (ColorChoice == "Blue" && (pos.Row == targetRow && pos.Col == targetColumn))
             {
-                ellipse.Fill = Colors.Blue;
-                bool playAgain = await DisplayAlert("Result", "You made the right choice! Play again?", "Yes", "No");
-                if (playAgain)
+                if (pos.Row == blackPillRow && pos.Col == blackPillColumn)
                 {
-                    NavigateBack();
+                    ellipse.Fill = Colors.Black;
+                    await DisplayAlert("The Black Pill?", "Oh… you weren’t supposed to find that. Game Over!!!", "OK");
+                    await Shell.Current.GoToAsync("///HomePage");
+                    return;
                 }
                 else
                 {
-                    await Shell.Current.GoToAsync("///HomePage");
+                    ellipse.Fill = Colors.Blue;
+                    bool playAgain = await DisplayAlert("Blue Pill found!", "Enjoy the calm and peace you've chosen! Play again?", "Yes", "No");
+                    if (playAgain)
+                    {
+                        NavigateBack();
+                    }
+                    else
+                    {
+                        await Shell.Current.GoToAsync("///HomePage");
+                    }
                 }
             }
             else
             {
                 ellipse.Fill = GetRandomColor();
-                // when time runs out, display result: 
-
-                //await DisplayAlert("Result", "Accept the Truth! You’ve got a colorful world anyway.", "OK");
+                ellipse.GestureRecognizers.Clear(); // disable further taps on this pill
             }
-            // prompt the player to play again or exit
-            //bool playAgain = await DisplayAlert("Play Again?", "Do you want to play again?", "Yes", "No");
 
 
-            // TODO: If the black pill is found, the game ends immediately and displays:“Oops! Life happens - you’re poisoned!” The player can choose to continue the next session or not. 
+            // TODO: If the black pill is found, the game ends: The Black Pill? Oh… you weren’t supposed to find that. Game ends here.
 
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            LbColor.Text += ColorChoice;
+            //LbColor.Text += ColorChoice;
+            EpTarget.Fill = ColorChoice == "Red" ? Colors.Red : Colors.Blue;
+            ;
 
             StartGame();
 
-            // TODO: Start a countdown timer of 10 seconds for the game session
+            // TODO: add a timer for the game session
         }
 
 
