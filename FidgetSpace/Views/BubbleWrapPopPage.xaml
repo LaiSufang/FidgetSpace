@@ -2,11 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FidgetSpace.Views.BubbleWrapPopPage"
-             Title="BubbleWrapPopPage"
              >
     <VerticalStackLayout>
-        <Label x:Name="ScoreLbl"
-               FontSize="32"
+        <Label Text="Bubble Wrap Pop"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="MediumAquamarine"
                HorizontalOptions="Center"
                Margin="0,20,0,10"/>
         <Label Text="Pop the bubbles by tapping on them."
@@ -15,6 +16,13 @@
                Margin="0,0,0,20"/>
         <Grid x:Name="GameBoard"
               Margin="10" />
+        <!--game info / status: timer-->
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
+        <HorizontalStackLayout Spacing="100" Margin="20">
+            <Label x:Name="ScoreLbl" />
+            <Label x:Name="TimerLbl" Text="Timer: " />
+        </HorizontalStackLayout>
+        <!--<BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>-->
     </VerticalStackLayout>
 
 

@@ -13,14 +13,14 @@ namespace FidgetSpace.Models
         public int x { get; set; }
         public int y { get; set; }
 
-        private static readonly Random rng = new();
+        private static readonly Random random = new Random();
 
         public Bubble(int col, int row)
         {
             Marked = false;
             // Sets X and Y coordinates
-            x = rng.Next(0, row);
-            y = rng.Next(0, col);
+            x = (int)(random.NextDouble() * row);
+            y = (int)(random.NextDouble() * col);
 
             // Reference: https://www.telerik.com/blogs/using-csharp-markup-create-graphical-interfaces-net-maui?
             Button = new Button
@@ -46,7 +46,14 @@ namespace FidgetSpace.Models
         public void OnBubbleClicked(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            button.IsVisible = false;
+            button.Opacity = 0;
+            button.IsEnabled = false;
+        }
+
+        public void regenLoc(int col, int row)
+        {
+            x = (int)(random.NextDouble() * row);
+            y = (int)(random.NextDouble() * col);
         }
     }
 }

@@ -7,15 +7,16 @@
     Shell.FlyoutBehavior="Disabled"
     Title="FidgetSpace">
 
+    <!--
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:Signin}"
-        Route="SignUpPage" /> 
+        Route="SignUpPage" /> -->
 
     <ShellContent
-    Title="Home"
-    ContentTemplate="{DataTemplate local:HomePage}"
-    Route="HomePage" />
+        Title="Home"
+        ContentTemplate="{DataTemplate local:HomePage}"
+        Route="HomePage" />
 
     <!--<TabBar>
         <Tab Title="Home" Icon="dotnet_bot.png">
