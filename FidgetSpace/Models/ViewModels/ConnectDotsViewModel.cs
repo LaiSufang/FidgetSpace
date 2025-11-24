@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FidgetSpace.Features.ConnectDots.Models;
 using Microsoft.Maui.Controls;
 
 namespace FidgetSpace.Models.ViewModels

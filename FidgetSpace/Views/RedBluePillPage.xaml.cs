@@ -24,7 +24,7 @@ namespace FidgetSpace.Views
             EpRed.WidthRequest = 120;
 
             FrPillChoice.IsVisible = true;
-            PillChoice.Text = $"Red Pill! Be ready to embrace a difficult truth! Start game and find the red pill within 10 seconds!";
+            PillChoice.Text = $"Red Pill selected! Be ready for a difficult truth! You have 10 seconds to find it...Go!";
             //PillChoice.TextColor = Microsoft.Maui.Graphics.Colors.Red;
 
             EpBlue.HeightRequest = 100;
@@ -39,7 +39,7 @@ namespace FidgetSpace.Views
             EpBlue.WidthRequest = 120;
 
             FrPillChoice.IsVisible = true;
-            PillChoice.Text = $"Blue Pill! It's good to stay in blissful ignorance! Start game and find the blue pill within 10 seconds!";
+            PillChoice.Text = $"Blue Pill...Entering bliss mode! You've got 30 seconds to find the blue pill!";
             //PillChoice.TextColor = Microsoft.Maui.Graphics.Colors.Blue;
             EpRed.HeightRequest = 100;
             EpRed.WidthRequest = 100;
