@@ -1,4 +1,5 @@
 using FidgetSpace.Models;
+using System.Runtime.CompilerServices;
 
 namespace FidgetSpace.Views
 {
@@ -8,10 +9,11 @@ namespace FidgetSpace.Views
         public int bwp_GameTime = 0;
         public double bwp_TotalTime = 0;
         IDispatcherTimer timer;
-        private readonly int rows = 6;
-        private readonly int columns = 4;
-        private readonly int totalBubbles = 6;
-        private readonly List<Bubble> bubbles = new List<Bubble>();
+        private int rows = 6;
+        private int columns = 4;
+        private int cellSize = 70;
+        private int totalBubbles = 6;
+        private List<Bubble> bubbles = new List<Bubble>();
         private bool isNavigatingHome = false; // Flag to raise alert on going back 
 
         public BubbleWrapPopPage()
@@ -23,14 +25,20 @@ namespace FidgetSpace.Views
             timer.Start();
             ScoreLbl.Text = $"Score: {bwp_Score}";
 
+            var boardWidth = rows * cellSize;
+            var boardHeight = columns * cellSize;
             for (int i = 0; i < rows; i++)
             {
-                GameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                GameBoard.RowDefinitions.Add(new RowDefinition { Height = new GridLength(cellSize, GridUnitType.Absolute) });
+
+                //GameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
             }
 
             for (int j = 0; j < columns; j++)
             {
-                GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(cellSize, GridUnitType.Absolute) });
+
+                //GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
             }
 
             GenerateBoard();
@@ -38,6 +46,22 @@ namespace FidgetSpace.Views
 
         private void GenerateBoard()
         {
+            for (int x = 0; x < rows; x++)
+            {
+                for (int y = 0; y < columns; y++)
+                {
+                    var cellBg = new BoxView
+                    {
+                        // Pick a subtle color if you want to visualize cells; Transparent keeps it invisible
+                        Color = Colors.Transparent,
+                        InputTransparent = true, // Do not block bubble taps
+                        IsEnabled = false
+                    };
+                    GameBoard.Add(cellBg, y, x);
+                    Grid.SetColumn(cellBg, y);
+                    Grid.SetRow(cellBg, x);
+                }
+            }
             for (int i = 0; i < totalBubbles; i++)
             {
                 var bubble = new Bubble(columns, rows);
@@ -50,6 +74,7 @@ namespace FidgetSpace.Views
                 bubble.Button.Clicked += OnBubbleClicked;
 
                 // Bubble.x is row, Bubble.y is column
+                bubble.Button.ZIndex = 1;
                 GameBoard.Add(bubble.Button, bubble.y, bubble.x);
                 Grid.SetColumn(bubble.Button, bubble.y);
                 Grid.SetRow(bubble.Button, bubble.x);

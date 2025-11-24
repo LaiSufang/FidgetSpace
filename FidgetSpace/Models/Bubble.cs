@@ -30,8 +30,7 @@ namespace FidgetSpace.Models
                 CornerRadius = 30,
                 BackgroundColor = Colors.White,
                 ImageSource = "tealbubble.png",
-                Text = string.Empty,
-                Margin = 6,
+                Margin=5, 
                 Shadow = new Shadow
                 {
                     Brush = new SolidColorBrush(Colors.DarkSeaGreen),
