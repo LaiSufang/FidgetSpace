@@ -13,6 +13,22 @@
     </ContentPage.BindingContext>
 
     <VerticalStackLayout Padding="16" Spacing="10">
+        <Label Text="Total Time Played:"
+           FontAttributes="Bold"
+           HorizontalOptions="Center" />
+
+        <Label Text="{Binding TotalTimePlayedDisplay}"
+           FontSize="18"
+           HorizontalOptions="Center" />
+
+        <Label Text="Last Game Time:"
+           FontAttributes="Bold"
+           HorizontalOptions="Center" />
+
+        <Label Text="{Binding SessionTimeDisplay}"
+           FontSize="18"
+           HorizontalOptions="Center" />
+
 
         <!-- 顶部：显示剩余对数 + New 按钮 -->
         <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
@@ -64,13 +80,6 @@
                                     BackgroundColor="Transparent"
                                     IsVisible="{Binding IsSelected}" />
 
-
-                                <!-- Power 点：中间画一个星星 -->
-                                <Label Text="X"
-                                       FontSize="16"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       IsVisible="{Binding IsPower}" />
                             </Grid>
                         </Frame>
                     </Grid>

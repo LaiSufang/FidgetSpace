@@ -5,8 +5,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FidgetSpace.Features.ConnectDots.Models;
+using FidgetSpace.Models;
 using Microsoft.Maui.Controls;
+using System.Diagnostics;          // 计时器 Stopwatch
+using Microsoft.Maui.Storage;      // Preferences 本地存储
+using Microsoft.Maui.Dispatching;
 
 namespace FidgetSpace.Models.ViewModels
 {
@@ -51,6 +54,42 @@ namespace FidgetSpace.Models.ViewModels
             }
         }
 
+        // ⭐ 计时相关字段
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private bool _isTimerRunning;
+
+        // 保存总秒数（历史 + 当前已完成局）
+        private int totalTimePlayedSeconds;
+
+        // 用于 UI 显示的总时间文本
+        private string totalTimePlayedDisplay;
+        public string TotalTimePlayedDisplay
+        {
+            get => totalTimePlayedDisplay;
+            set
+            {
+                if (totalTimePlayedDisplay != value)
+                {
+                    totalTimePlayedDisplay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // ⭐ 用于 UI 显示的「本局用时」
+        private string sessionTimeDisplay;
+        public string SessionTimeDisplay
+        {
+            get => sessionTimeDisplay;
+            set
+            {
+                if (sessionTimeDisplay != value)
+                {
+                    sessionTimeDisplay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         // 剩余可配对的对数（显示在页面顶部）
         private int remainingPairs;
         public int RemainingPairs
@@ -105,8 +144,92 @@ namespace FidgetSpace.Models.ViewModels
             NewGameCommand = new Command(GenerateBoard);
             TapCommand = new Command<ConnectDotsCell>(OnTap);
 
+            // ⭐ 从本地读取之前累计的总时长（秒数）
+            totalTimePlayedSeconds = Preferences.Get("ConnectDots_TotalTimeSeconds", 0);
+            TotalTimePlayedDisplay = TimeSpan
+                .FromSeconds(totalTimePlayedSeconds)
+                .ToString(@"hh\:mm\:ss");
+
+            // 初始化本局时间为 00:00:00
+            SessionTimeDisplay = TimeSpan
+                .FromSeconds(0)
+                .ToString(@"hh\:mm\:ss");
+
+
+
             GenerateBoard();
         }
+
+        /// <summary>
+        /// 页面进入时调用，开始本局计时（现在由第一次点击触发）
+        /// </summary>
+        public void StartTimer()
+        {
+            _stopwatch.Reset();
+            _stopwatch.Start();
+            _isTimerRunning = true;
+
+            // 每秒刷新一次 TotalTimePlayedDisplay
+            Application.Current.Dispatcher.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                if (!_isTimerRunning)
+                    return false; // 停止这个 UI timer
+
+                // 本局已经过去的秒数
+                int sessionSeconds = (int)_stopwatch.Elapsed.TotalSeconds;
+
+                // 当前总时间 = 已保存的总秒数 + 本局已经过去的秒数
+                int currentTotalSeconds = totalTimePlayedSeconds + sessionSeconds;
+
+                // 更新总时间显示
+                TotalTimePlayedDisplay = TimeSpan
+                    .FromSeconds(currentTotalSeconds)
+                    .ToString(@"hh\:mm\:ss");
+
+                // ⭐ 更新本局时间显示
+                SessionTimeDisplay = TimeSpan
+                    .FromSeconds(sessionSeconds)
+                    .ToString(@"hh\:mm\:ss");
+
+                return true; // 返回 true 表示 1 秒后继续调用（循环）
+            });
+
+        }
+
+        /// <summary>
+        /// 页面离开时调用，停止并保存本局时间到总时长
+        /// </summary>
+        public void StopAndSaveTimer()
+        {
+            // 如果本局根本没开始计时，就不用保存
+            if (!_isTimerRunning)
+                return;
+
+            _isTimerRunning = false;
+            _stopwatch.Stop();
+
+            int sessionSeconds = (int)_stopwatch.Elapsed.TotalSeconds;
+            if (sessionSeconds <= 0)
+                return;
+
+            // ⭐ 停下来时，把本局最终用时显示出来
+            SessionTimeDisplay = TimeSpan
+                .FromSeconds(sessionSeconds)
+                .ToString(@"hh\:mm\:ss");
+
+            // 累加到总时长
+            totalTimePlayedSeconds += sessionSeconds;
+
+            // 保存到本地
+            Preferences.Set("ConnectDots_TotalTimeSeconds", totalTimePlayedSeconds);
+
+            // 再更新一次显示（确保停下来的时候是最新值）
+            TotalTimePlayedDisplay = TimeSpan
+                .FromSeconds(totalTimePlayedSeconds)
+                .ToString(@"hh\:mm\:ss");
+        }
+
+
 
         /// <summary>
         /// 生成新的棋盘：颜色成对出现、随机分布
@@ -185,6 +308,12 @@ namespace FidgetSpace.Models.ViewModels
             if (cell == null) return;
             if (!cell.IsVisible) return;
 
+            // ⭐ 第一次真正点击任意一个点时，才开始计时
+            if (!_isTimerRunning)
+            {
+                StartTimer();
+            }
+
             // 第一次点击：记录并高亮
             if (firstSelected == null)
             {
@@ -224,6 +353,7 @@ namespace FidgetSpace.Models.ViewModels
             }
         }
 
+
         /// <summary>
         /// 检查是否已经没有可见的点，如果是则提示并重开一局
         /// </summary>
@@ -232,6 +362,9 @@ namespace FidgetSpace.Models.ViewModels
             bool anyVisible = Cells.Any(x => x.IsVisible);
             if (!anyVisible)
             {
+                // ⭐ 这一局已经结束，先把本局时间停掉并累加到总时长
+                StopAndSaveTimer();
+
                 BoardActive = false;
 
 #if ANDROID || WINDOWS
@@ -240,9 +373,13 @@ namespace FidgetSpace.Models.ViewModels
                     "All dots cleared!",
                     "OK");
 #endif
+
+                // 如果你希望通关后自动开始下一局，就保留这行；
+                // 如果你想让玩家点击“New”再开始，就可以把这行注释掉。
                 GenerateBoard();
             }
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
