@@ -4,7 +4,7 @@
              x:Class="FidgetSpace.Views.RedBluePillGamePage"
              xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
              x:DataType="vm:RedBluePillGameViewModel"
-             Title="RedBluePillGamePage">
+             Title="Back">
 
     <!--override the back button behavior-->
     <!--<Shell.BackButtonBehavior>
@@ -16,20 +16,20 @@
     </Shell.BackButtonBehavior>-->
 
     <!--game UI starts here-->
-    <VerticalStackLayout Margin="20" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+    <VerticalStackLayout Margin="35" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
         
         <!--gameboard: a grid of tappable color pills-->
-        <Grid x:Name="GameBoard" />
+        <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Center"/>
 
         <!--game info / status: timer-->
-        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
-        <HorizontalStackLayout Spacing="20" Margin="20">
-            <Label x:Name="LbColor" Text="Target Pill:" FontAttributes="Bold"/>
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500" Margin="0,20,0,0"/>
+        <HorizontalStackLayout Spacing="20" Margin="10">
+            <Label x:Name="LbColor" Text="Target Pill:" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
             <Ellipse x:Name="EpTarget" HeightRequest="20" WidthRequest="20" Fill="Blue"/>
             <Label Text="Timer:" Margin="40,0,0,0" FontAttributes="Bold"/>
-            <Label x:Name="LbTimer" Text="{Binding RemainingSeconds, StringFormat='{0}   Seconds'}" FontAttributes="Bold"/>
+            <Label x:Name="LbTimer" Text="{Binding RemainingSeconds, StringFormat='{0}   Seconds'}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
         </HorizontalStackLayout>
-        <!--<BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>-->
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
         
     </VerticalStackLayout>
 </ContentPage>

@@ -112,6 +112,7 @@ namespace FidgetSpace.Views
             Colors.GreenYellow,
             Colors.Khaki,
             Colors.MediumPurple,
+            Colors.CadetBlue,
         };
             int index = ran.Next(colorList.Count);
             return new SolidColorBrush(colorList[index]);
