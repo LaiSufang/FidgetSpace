@@ -19,11 +19,16 @@
 
         <VerticalStackLayout VerticalOptions="Center" Spacing="15">
 
-            <Label Text="GAME LOGIN"
+            <Label Text="Fidget Space"
                    HorizontalOptions="Center"
                    FontSize="32"
                    TextColor="White"
                    FontAttributes="Bold"/>
+            <Label Text="LOGIN"
+                   HorizontalOptions="Center"
+                   FontSize="26"
+                   TextColor="White"
+                   />
 
             <Entry Placeholder="Username"
                    Text="{Binding Username}"

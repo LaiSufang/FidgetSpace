@@ -46,22 +46,9 @@ namespace FidgetSpace.Views
 
         private void GenerateBoard()
         {
-            for (int x = 0; x < rows; x++)
-            {
-                for (int y = 0; y < columns; y++)
-                {
-                    var cellBg = new BoxView
-                    {
-                        // Pick a subtle color if you want to visualize cells; Transparent keeps it invisible
-                        Color = Colors.Transparent,
-                        InputTransparent = true, // Do not block bubble taps
-                        IsEnabled = false
-                    };
-                    GameBoard.Add(cellBg, y, x);
-                    Grid.SetColumn(cellBg, y);
-                    Grid.SetRow(cellBg, x);
-                }
-            }
+            var tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += OnBubbleClicked;
+           
             for (int i = 0; i < totalBubbles; i++)
             {
                 var bubble = new Bubble(columns, rows);
@@ -71,9 +58,8 @@ namespace FidgetSpace.Views
                 }
 
                 bubbles.Add(bubble);
-                bubble.Button.Clicked += OnBubbleClicked;
-
-                // Bubble.x is row, Bubble.y is column
+                //bubble.Button.Clicked += OnBubbleClicked;
+                bubble.Button.GestureRecognizers.Add(tapGesture);
                 bubble.Button.ZIndex = 1;
                 GameBoard.Add(bubble.Button, bubble.y, bubble.x);
                 Grid.SetColumn(bubble.Button, bubble.y);
@@ -114,6 +100,21 @@ namespace FidgetSpace.Views
             }
         }
 
+        private bool SpinWheel()
+        {
+            // Generate a random number from 1 to 10
+            Random random = new Random();
+            int spin = random.Next(1, 11);
+
+            if (spin == 1)
+            {
+                return true; // User wins
+            }
+            else
+            {
+                return false; // User loses
+            }
+        }
         private void OnTimerTick(object sender, EventArgs e)
         {
             bwp_GameTime++;

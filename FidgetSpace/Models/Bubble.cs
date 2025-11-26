@@ -8,7 +8,7 @@ namespace FidgetSpace.Models
 {
     public class Bubble
     {
-        public Button Button { get; set; }
+        public Image Button { get; set; }
         public bool Marked { get; set; }
         public int x { get; set; }
         public int y { get; set; }
@@ -22,6 +22,7 @@ namespace FidgetSpace.Models
             x = (int)(random.NextDouble() * row);
             y = (int)(random.NextDouble() * col);
 
+            /*
             // Reference: https://www.telerik.com/blogs/using-csharp-markup-create-graphical-interfaces-net-maui?
             Button = new Button
             {
@@ -39,14 +40,23 @@ namespace FidgetSpace.Models
                     Radius = 5
                 }
             };
-            Button.Clicked += OnBubbleClicked;
+            Button.Clicked += OnBubbleClicked;*/
+            Button = new Image
+            {
+                Source = "tealbubble.png",
+                WidthRequest = 60,
+                HeightRequest = 60,
+                Margin = 5
+            };
+            var tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += OnBubbleClicked;
+            Button.GestureRecognizers.Add(tapGesture);
         }
 
-        public void OnBubbleClicked(object sender, EventArgs e)
+        private void OnBubbleClicked(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
-            button.Opacity = 0;
-            button.IsEnabled = false;
+            Button.Opacity = 0;
+            Button.IsEnabled = false;
         }
 
         public void regenLoc(int col, int row)
