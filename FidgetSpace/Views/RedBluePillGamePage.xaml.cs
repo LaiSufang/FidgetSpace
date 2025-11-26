@@ -100,19 +100,20 @@ namespace FidgetSpace.Views
             var colorList = new List<Color>
         {
             Colors.MistyRose,
-            Colors.Coral,
+            Colors.PaleTurquoise,
             Colors.Pink,
             Colors.Orange,
             Colors.Orchid,
             Colors.Cyan,
             Colors.Lime,
-            Colors.Tomato,
+            Colors.Beige,
             Colors.Turquoise,
             Colors.Gold,
             Colors.GreenYellow,
             Colors.Khaki,
             Colors.MediumPurple,
             Colors.CadetBlue,
+            Colors.Teal,
         };
             int index = ran.Next(colorList.Count);
             return new SolidColorBrush(colorList[index]);
@@ -158,6 +159,12 @@ namespace FidgetSpace.Views
                 // red is found, stop timer
                 rbpGameTimerVm.Stop();
 
+                // add vibration feedback
+                if (Vibration.Default.IsSupported)
+                {
+                    Vibration.Default.Vibrate();
+                }
+
                 ellipse.Fill = Colors.Black;
                 await DisplayAlert("The Black Pill?", "Oh… you weren’t supposed to find that. Game Over!!!", "OK");
                 await Shell.Current.GoToAsync("///HomePage");
@@ -167,6 +174,12 @@ namespace FidgetSpace.Views
             {
                 // red is found, stop timer
                 rbpGameTimerVm.Stop();
+
+                // add vibration feedback
+                if (Vibration.Default.IsSupported)
+                {
+                    Vibration.Default.Vibrate();
+                }
 
                 ellipse.Fill = Colors.Red;
                 bool playAgain = await DisplayAlert($"Wow~~Your found it in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Welcome to the real world...but this is only the beginning! \n\nPlay again?", "Yes", "No");
@@ -187,6 +200,11 @@ namespace FidgetSpace.Views
                 if (pos.Row == blackPillRow && pos.Col == blackPillColumn)
                 {
                     ellipse.Fill = Colors.Black;
+                    // add vibration feedback
+                    if (Vibration.Default.IsSupported)
+                    {
+                        Vibration.Default.Vibrate();
+                    }
                     await DisplayAlert("The Black Pill?", "Oh… you weren’t supposed to find that. Game Over!!!", "OK");
                     await Shell.Current.GoToAsync("///HomePage");
                     return;
@@ -194,6 +212,11 @@ namespace FidgetSpace.Views
                 else
                 {
                     ellipse.Fill = Colors.Blue;
+                    // add vibration feedback
+                    if (Vibration.Default.IsSupported)
+                    {
+                        Vibration.Default.Vibrate();
+                    }
                     bool playAgain = await DisplayAlert($"Wow~~Your found the blue pill in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Enjoy the calm and peace you've chosen! \n\nPlay again?", "Yes", "No");
                     if (playAgain)
                     {
