@@ -4,24 +4,24 @@ using System.Runtime.CompilerServices;
 namespace FidgetSpace.Models
 {
     /// <summary>
-    /// 这个类表示“连点游戏里的一颗点”
-    /// 保存这颗点的：位置、颜色、是否被选中、是否显示、是不是 Power 点
-    /// 实现 INotifyPropertyChanged 是为了让 UI 在属性变化时自动刷新
+    /// This class represents a single dot in the dot-connecting game.
+    /// It stores the dot's: position, color, selected state, visibility, and whether it's a Power dot.
+    /// Implementing INotifyPropertyChanged ensures the UI automatically refreshes when properties change.
     /// </summary>
     public class ConnectDotsCell : INotifyPropertyChanged
     {
-        // 每颗点的编号（方便调试或以后扩展）
+        // The number assigned to each point (for debugging or future expansion)
         public int Id { get; set; }
 
-        // 点在第几行
+        // Which line is the point on?
         public int Row { get; set; }
 
-        // 点在第几列
+        // Which column is the point in?
         public int Col { get; set; }
 
-        // ================= 下面是和 UI 绑定的属性 =================
+        // ================= Below are the properties bound to the UI. =================
 
-        // 点的颜色（绑定到 Frame.BackgroundColor）
+        // The color of the point (bound to Frame.BackgroundColor)
         private string colorName; // use for store data
         public string ColorName     // use for acess and API
         {
@@ -31,12 +31,12 @@ namespace FidgetSpace.Models
                 if (colorName != value)
                 {
                     colorName = value;
-                    OnPropertyChanged();   // 通知 UI：颜色变了
+                    OnPropertyChanged();   // Notification UI: Color changed
                 }
             }
         }
 
-        // 是否被选中（选中时 UI 会画一个白色边框）
+        // Whether selected (a white border appears around the UI element when selected)
         private bool isSelected;
         public bool IsSelected
         {
@@ -46,13 +46,13 @@ namespace FidgetSpace.Models
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    OnPropertyChanged();   // 通知 UI：选中状态变了
+                    OnPropertyChanged();   // Notification UI: Selected state changed
                 }
             }
         }
 
-        // 是否可见（配对成功后我们会把它设为 false，让点在 UI 上消失）
-        private bool isVisible = true; // 默认都显示
+        // Visible (After successful pairing, we will set this to false to make the dot disappear from the UI)
+        private bool isVisible = true; // Display all by default
         public bool IsVisible
         {
             get { return isVisible; }
@@ -61,33 +61,18 @@ namespace FidgetSpace.Models
                 if (isVisible != value)
                 {
                     isVisible = value;
-                    OnPropertyChanged();   // 通知 UI：是否显示改变
+                    OnPropertyChanged();   // Notification UI: Show Change
                 }
             }
         }
 
-        // 是否是 Power 点（★），点击时会清除所有同色点
-        private bool isPower;
-        public bool IsPower
-        {
-            get { return isPower; }
-            set
-            {
-                if (isPower != value)
-                {
-                    isPower = value;
-                    OnPropertyChanged();   // 通知 UI：是否是 Power 点改变
-                }
-            }
-        }
-
-        // ================= INotifyPropertyChanged 标准写法 =================
+        // ================= INotifyPropertyChanged =================
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// 触发属性变化事件
-        /// [CallerMemberName]：如果不传参数，会自动使用当前属性名
+        /// Trigger property change event
+        /// [CallerMemberName]: If no parameter is passed, the current property name is automatically used
         /// </summary>
         void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
