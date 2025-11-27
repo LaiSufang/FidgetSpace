@@ -1,4 +1,5 @@
 using FidgetSpace.Models;
+using FidgetSpace.Models.ViewModels;
 using System.Runtime.CompilerServices;
 
 namespace FidgetSpace.Views
@@ -8,22 +9,25 @@ namespace FidgetSpace.Views
         public int bwp_Score = 0;
         public int bwp_GameTime = 0;
         public double bwp_TotalTime = 0;
+        public int currentBubbles;
         IDispatcherTimer timer;
         private int rows = 6;
         private int columns = 4;
         private int cellSize = 70;
         private int totalBubbles = 6;
         private List<Bubble> bubbles = new List<Bubble>();
+        BubbleWrapPopViewModel bwp_VM = new BubbleWrapPopViewModel();
         private bool isNavigatingHome = false; // Flag to raise alert on going back 
 
         public BubbleWrapPopPage()
         {
             InitializeComponent();
+            BindingContext = bwp_VM;
             timer = Dispatcher.CreateTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += OnTimerTick;
             timer.Start();
-            ScoreLbl.Text = $"Score: {bwp_Score}";
+            // ScoreLbl.Text = $"Score: {bwp_Score}";
 
             var boardWidth = rows * cellSize;
             var boardHeight = columns * cellSize;
@@ -42,6 +46,8 @@ namespace FidgetSpace.Views
             }
 
             GenerateBoard();
+            bwp_VM.Score = 0;
+            bwp_VM.TotalTime = 0;
         }
 
         private void GenerateBoard()
@@ -57,6 +63,10 @@ namespace FidgetSpace.Views
                     bubble.regenLoc(columns, rows);
                 }
 
+                if (SpinWheel())
+                {
+                    bubble.Marked = true;
+                }
                 bubbles.Add(bubble);
                 //bubble.Button.Clicked += OnBubbleClicked;
                 bubble.Button.GestureRecognizers.Add(tapGesture);
@@ -65,12 +75,11 @@ namespace FidgetSpace.Views
                 Grid.SetColumn(bubble.Button, bubble.y);
                 Grid.SetRow(bubble.Button, bubble.x);
             }
+            currentBubbles = totalBubbles;
         }
 
-        private void ResetBoard()
+        public void ResetBoard()
         {
-            bwp_Score = 0;
-            ScoreLbl.Text = $"Score: {bwp_Score}";
             GameBoard.Children.Clear();
             bubbles.Clear();
             GenerateBoard();
@@ -78,22 +87,42 @@ namespace FidgetSpace.Views
 
         private async void OnBubbleClicked(object sender, EventArgs e)
         {
-            bwp_Score++;
-            ScoreLbl.Text = $"Score: {bwp_Score}";
+            bwp_VM.Score++;
+            //bwp_Score++;
+            // ScoreLbl.Text = $"Score: {bwp_Score}";
+            currentBubbles--;
 
-            if (bwp_Score >= totalBubbles) // Game finished
+            // If bubble is marked, clear board and add remaining bubbles to score, then regenerate board
+            if (bubbles.Any(b => b.Button == sender && b.Marked))
+            {       
+                bwp_VM.Score += currentBubbles;
+                // bwp_Score += currentBubbles;
+                // ScoreLbl.Text = $"Score: {bwp_Score}";
+                GameBoard.Children.Clear();
+                bubbles.Clear();
+                GenerateBoard();
+            }
+
+            if (currentBubbles == 0) // No more bubbles left
             {
                 timer.Stop();
-                bwp_TotalTime = bwp_GameTime;
-                bool playAgain = await DisplayAlert("Congrats!", $"You popped all the bubbles in {bwp_TotalTime} seconds", "Play again?", "Go Home");
-                
+                bwp_VM.TotalTime = bwp_GameTime; 
+                bool playAgain = await DisplayAlert("Congrats!", $"You popped all the bubbles in {bwp_VM.TotalTime} seconds", "Play again?", "Go Home");
+                Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50));
+
                 if (playAgain)
                 {
                     timer.Start();
                     ResetBoard();
+                    bwp_VM.Score = 0;
                 }
                 else
                 { // User doesn't want to play again
+                    if (bwp_VM.Score > bwp_VM.HighScore)
+                    {
+                        bwp_VM.HighScore = bwp_VM.Score;
+                    }
+                    // bwp_VM.TotalTime = bwp_TotalTime;
                     isNavigatingHome = true;
                     await Shell.Current.GoToAsync("///HomePage");
                 }
@@ -108,17 +137,19 @@ namespace FidgetSpace.Views
 
             if (spin == 1)
             {
-                return true; // User wins
+                return true; // Mark Bubble
             }
             else
             {
-                return false; // User loses
+                return false;
             }
         }
+
         private void OnTimerTick(object sender, EventArgs e)
         {
             bwp_GameTime++;
-            TimerLbl.Text = $"Total Play Time: {bwp_GameTime}s";
+            bwp_VM.TotalTime = bwp_GameTime;
+            // TimerLbl.Text = $"Total Play Time: {bwp_GameTime}s";
         }
 
         // Overrides back button press to confirm with user if they want to go home
