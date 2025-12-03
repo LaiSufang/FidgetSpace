@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FidgetSpace.Views.RedBluePillPage"
-             Title="Red Pill or Blue Pill">
+             Title="Back">
 
     <!--override the back button behavior-->
    <!--<Shell.BackButtonBehavior>
@@ -17,7 +17,7 @@
     <Grid RowDefinitions="auto,*,*,*"
           ColumnDefinitions="*,*"
           HorizontalOptions="Center"
-          RowSpacing="10"
+          RowSpacing="20"
           ColumnSpacing="10"
           Margin="20">
 
@@ -29,12 +29,6 @@
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10" VerticalOptions="Center">
             <Ellipse x:Name="EpRed" HeightRequest="100" WidthRequest="100" Fill="Red">
-                <!--<Ellipse.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Offset="0.1" Color="Red"/>
-                        <GradientStop Offset="1.0" Color="LightPink"/>
-                    </RadialGradientBrush>
-                </Ellipse.Background>-->
                 <Ellipse.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Ellipse.GestureRecognizers>
@@ -46,13 +40,6 @@
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10" VerticalOptions="Center">
             <Ellipse x:Name="EpBlue" HeightRequest="100" WidthRequest="100" Fill="Blue">
-                <!--<Ellipse.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Offset="0.1" Color="Blue"/>
-                        <GradientStop Offset="1.0" Color="LightBlue"/>
-                    </RadialGradientBrush>
-                </Ellipse.Background>-->
-
                 <Ellipse.GestureRecognizers>
                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1"/>
                 </Ellipse.GestureRecognizers>
@@ -63,13 +50,13 @@
         </VerticalStackLayout>
 
         <Frame x:Name="FrPillChoice" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-               BackgroundColor="AliceBlue" Margin="10" IsVisible="False">
+               BackgroundColor="AliceBlue" Margin="10" IsVisible="False" BorderColor="AliceBlue" CornerRadius="20">
             <Label x:Name="PillChoice"  
-               Padding="20" Text="" TextColor="Black" FontSize="Medium" />
+               Padding="20" Text="" TextColor="Black" FontSize="Body" VerticalTextAlignment="Center"/>
         </Frame>
 
-        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                WidthRequest="250" HeightRequest="80"
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="10"
+                 HeightRequest="80"
                 BackgroundColor="Lavender" 
                 Text="Start" 
                 FontSize="Large" FontAttributes="Bold" TextColor="Black" FontFamily=""
