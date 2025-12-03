@@ -38,7 +38,7 @@
                 Route="SettingsPage"
                 ContentTemplate="{DataTemplate local:SettingsPage}" />
         </Tab>
-        
+
     </TabBar>-->
 
 </Shell>
