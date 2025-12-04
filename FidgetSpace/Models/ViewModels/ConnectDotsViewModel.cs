@@ -1,26 +1,34 @@
-﻿using System;
+﻿using FidgetSpace.Models;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Dispatching;
+using Microsoft.Maui.Storage;      // Preferences Local storage
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;          // Stopwatch
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Microsoft.Maui.Controls;
+using static SQLite.TableMapping;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace FidgetSpace.Models.ViewModels
 {
     /// <summary>
-    /// 连点游戏的核心逻辑（MVVM 的 ViewModel）：
-    /// - 生成棋盘
-    /// - 处理点击
-    /// - 判断配对与结束
+    /// Core logic of the connect-the-dots game (MVVM ViewModel):
+    /// - Generate the game board
+    /// - Handle clicks
+    /// - Determine matching and game completion
     /// </summary>
     public class ConnectDotsViewModel : INotifyPropertyChanged
     {
-        // 用于绑定到 CollectionView 的点集合
+        // Point collection used for binding to CollectionView
         public ObservableCollection<ConnectDotsCell> Cells { get; set; }
 
-        // 行数（你可以根据需要调整）
+        // Number of lines (adjust as needed)
         private int rows = 4;
         public int Rows
         {
@@ -35,7 +43,7 @@ namespace FidgetSpace.Models.ViewModels
             }
         }
 
-        // 列数（默认 6 列）
+        //Number of columns(default: 6 columns)
         private int cols = 6;
         public int Cols
         {
@@ -50,7 +58,43 @@ namespace FidgetSpace.Models.ViewModels
             }
         }
 
-        // 剩余可配对的对数（显示在页面顶部）
+        // Timing-related fields
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private bool _isTimerRunning;
+
+        // Save total seconds (historical + currently completed games)
+        private int totalTimePlayedSeconds;
+
+        //Total time text for UI display
+        private string totalTimePlayedDisplay;
+        public string TotalTimePlayedDisplay
+        {
+            get => totalTimePlayedDisplay;
+            set
+            {
+                if (totalTimePlayedDisplay != value)
+                {
+                    totalTimePlayedDisplay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // Time Remaining for This Round” for UI display
+        private string sessionTimeDisplay;
+        public string SessionTimeDisplay
+        {
+            get => sessionTimeDisplay;
+            set
+            {
+                if (sessionTimeDisplay != value)
+                {
+                    sessionTimeDisplay = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        // Remaining available pairs (displayed at the top of the page)
         private int remainingPairs;
         public int RemainingPairs
         {
@@ -65,7 +109,7 @@ namespace FidgetSpace.Models.ViewModels
             }
         }
 
-        // 当前棋盘是否可以继续操作
+        // Can the current board be further manipulated?
         private bool boardActive = true;
         public bool BoardActive
         {
@@ -80,21 +124,21 @@ namespace FidgetSpace.Models.ViewModels
             }
         }
 
-        // 新游戏按钮命令
+        // New Game Button Command
         public ICommand NewGameCommand { get; set; }
 
-        // 点击某个点时触发的命令
+        // Command triggered when clicking a specific point
         public ICommand TapCommand { get; set; }
 
         private readonly Random random = new Random();
-        private ConnectDotsCell firstSelected;   // 记录第一次选中的点
+        private ConnectDotsCell firstSelected;   // Record the first selected point
 
-        // 使用的颜色集合
+        // Set of colors used
         private readonly string[] colors = new[]
         {
-            "#FF6B6B", // 红
-            "#4D96FF", // 蓝
-            "#6BCB77"  // 绿
+            "#FF6B6B", // red
+            "#4D96FF", // blue
+            "#6BCB77"  // green
         };
 
         public ConnectDotsViewModel()
@@ -104,11 +148,95 @@ namespace FidgetSpace.Models.ViewModels
             NewGameCommand = new Command(GenerateBoard);
             TapCommand = new Command<ConnectDotsCell>(OnTap);
 
+            // Read the cumulative total duration (in seconds) from the local storage.
+            totalTimePlayedSeconds = Preferences.Get("ConnectDots_TotalTimeSeconds", 0);
+            TotalTimePlayedDisplay = TimeSpan
+                .FromSeconds(totalTimePlayedSeconds)
+                .ToString(@"hh\:mm\:ss");
+
+            // Initialize the game time to 00:00:00
+            SessionTimeDisplay = TimeSpan
+                .FromSeconds(0)
+                .ToString(@"hh\:mm\:ss");
+
+
+
             GenerateBoard();
         }
 
         /// <summary>
-        /// 生成新的棋盘：颜色成对出现、随机分布
+        /// Called when the page loads, starting the session timer (now triggered by the first click)
+        /// </summary>
+        public void StartTimer()
+        {
+            _stopwatch.Reset();
+            _stopwatch.Start();
+            _isTimerRunning = true;
+
+            // Refreshes once per second TotalTimePlayedDisplay
+            Application.Current.Dispatcher.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                if (!_isTimerRunning)
+                    return false; // Stop this UI timer
+
+                // The number of seconds that have elapsed in this game
+                int sessionSeconds = (int)_stopwatch.Elapsed.TotalSeconds;
+
+                //Current Total Time = Total Seconds Saved + Seconds Elapsed in This Session
+                int currentTotalSeconds = totalTimePlayedSeconds + sessionSeconds;
+
+                // Total Update Time Display
+                TotalTimePlayedDisplay = TimeSpan
+                    .FromSeconds(currentTotalSeconds)
+                    .ToString(@"hh\:mm\:ss");
+
+                // Update the time display for this bureau
+                SessionTimeDisplay = TimeSpan
+                    .FromSeconds(sessionSeconds)
+                    .ToString(@"hh\:mm\:ss");
+
+                return true; // Return true to continue calling after 1 second (loop).
+            });
+
+        }
+
+        /// <summary>
+        /// Called when leaving the page, stops and saves the local time to the total duration.
+        /// </summary>
+        public void StopAndSaveTimer()
+        {
+            // If the game hasn't started timing at all, there's no need to save.
+            if (!_isTimerRunning)
+                return;
+
+            _isTimerRunning = false;
+            _stopwatch.Stop();
+
+            int sessionSeconds = (int)_stopwatch.Elapsed.TotalSeconds;
+            if (sessionSeconds <= 0)
+                return;
+
+            // When pausing, display the final time used for this game.
+            SessionTimeDisplay = TimeSpan
+                .FromSeconds(sessionSeconds)
+                .ToString(@"hh\:mm\:ss");
+
+            // Accumulated to total duration
+            totalTimePlayedSeconds += sessionSeconds;
+
+            // Save to local
+            Preferences.Set("ConnectDots_TotalTimeSeconds", totalTimePlayedSeconds);
+
+            // Update the display once more (to ensure the latest value is shown when it stops).
+            TotalTimePlayedDisplay = TimeSpan
+                .FromSeconds(totalTimePlayedSeconds)
+                .ToString(@"hh\:mm\:ss");
+        }
+
+
+
+        /// <summary>
+        /// Generate a new board: Colors appear in pairs, randomly distributed.
         /// </summary>
         void GenerateBoard()
         {
@@ -119,14 +247,14 @@ namespace FidgetSpace.Models.ViewModels
             int total = Rows * Cols;
             if (total % 2 != 0)
             {
-                total -= 1; // 保证是偶数，方便两两配对
+                total -= 1; // Ensure it is an even number to facilitate pairing in pairs.
             }
 
             var colorList = new System.Collections.Generic.List<string>();
             int pairCount = total / 2;
             int colorCount = colors.Length;
 
-            // 让每种颜色大致平分总对数
+            // Ensure each color roughly divides the total logarithm equally.
             int basePairs = pairCount / colorCount;
             int extraPairs = pairCount - basePairs * colorCount;
 
@@ -136,11 +264,11 @@ namespace FidgetSpace.Models.ViewModels
                 for (int p = 0; p < pairs; p++)
                 {
                     colorList.Add(colors[i]);
-                    colorList.Add(colors[i]); // 同色两颗，形成一对
+                    colorList.Add(colors[i]); // Two of the same color, forming a pair
                 }
             }
 
-            // 洗牌（打乱颜色顺序）
+            // Shuffle (disorder the color sequence)
             for (int i = colorList.Count - 1; i > 0; i--)
             {
                 int j = random.Next(i + 1);
@@ -174,9 +302,9 @@ namespace FidgetSpace.Models.ViewModels
         }
 
         /// <summary>
-        /// 点击某一个点时的处理逻辑：
-        /// - 如果是第一次点击：仅选中
-        /// - 第二次点击：如果颜色相同 → 两个都消失；否则切换选中
+        ///Handling logic when clicking a point:
+        /// - First click: Select only
+        /// - Second click: If colors match → Both disappear; otherwise toggle selection
         /// </summary>
         async void OnTap(ConnectDotsCell cell)
         {
@@ -184,7 +312,13 @@ namespace FidgetSpace.Models.ViewModels
             if (cell == null) return;
             if (!cell.IsVisible) return;
 
-            // 第一次点击：记录并高亮
+            // The timer only starts when you first click any point.
+            if (!_isTimerRunning)
+            {
+                StartTimer();
+            }
+
+            // First click: Record and highlight
             if (firstSelected == null)
             {
                 firstSelected = cell;
@@ -192,7 +326,7 @@ namespace FidgetSpace.Models.ViewModels
                 return;
             }
 
-            // 再点同一颗：取消选中
+            // Click the same one again: Deselect
             if (firstSelected == cell)
             {
                 cell.IsSelected = false;
@@ -200,7 +334,7 @@ namespace FidgetSpace.Models.ViewModels
                 return;
             }
 
-            // 第二次点击：颜色相同 → 消除这一对
+            // Second click: Same color → Eliminate this pair
             if (firstSelected.ColorName == cell.ColorName)
             {
                 firstSelected.IsVisible = false;
@@ -216,32 +350,51 @@ namespace FidgetSpace.Models.ViewModels
             }
             else
             {
-                // 颜色不同：切换选中到新的点
+                // Different colors: Switch selection to the new point
                 firstSelected.IsSelected = false;
                 firstSelected = cell;
                 cell.IsSelected = true;
             }
         }
 
-        /// <summary>
-        /// 检查是否已经没有可见的点，如果是则提示并重开一局
-        /// </summary>
+
         async Task CheckEnd()
         {
             bool anyVisible = Cells.Any(x => x.IsVisible);
             if (!anyVisible)
             {
+                // This game has ended. First, pause the game clock and add the time to the total duration.
+                StopAndSaveTimer();
+
                 BoardActive = false;
 
-#if ANDROID || WINDOWS
-                await Application.Current.MainPage.DisplayAlert(
-                    "Great!",
-                    "All dots cleared!",
-                    "OK");
+                // Vibrate once when the game ends.
+                try
+                {
+#if ANDROID || IOS
+            Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(300));  // 震动 0.3 秒
 #endif
+                }
+                catch (FeatureNotSupportedException)
+                {
+                    // Some devices do not support vibration; this field can be left blank.
+                }
+                catch (Exception)
+                {
+                    // Other anomalies are also ignored and do not affect gameplay.
+                }
+
+#if ANDROID || WINDOWS
+        await Application.Current.MainPage.DisplayAlert(
+            "Great!",
+            $"All dots cleared!\nTime:{SessionTimeDisplay}",
+            "OK");
+#endif
+
                 GenerateBoard();
             }
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
