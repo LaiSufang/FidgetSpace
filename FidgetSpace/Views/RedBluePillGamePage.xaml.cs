@@ -181,7 +181,7 @@ namespace FidgetSpace.Views
                     Vibration.Default.Vibrate();
                 }
 
-                ellipse.Fill = Colors.Red;
+                ellipse.Fill = new SolidColorBrush(Color.FromArgb("#FF6B6B"));
                 bool playAgain = await DisplayAlert($"Wow~~Your found it in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Welcome to the real world...but this is only the beginning! \n\nPlay again?", "Yes", "No");
                 if (playAgain)
                 {
@@ -211,7 +211,7 @@ namespace FidgetSpace.Views
                 }
                 else
                 {
-                    ellipse.Fill = Colors.Blue;
+                    ellipse.Fill = new SolidColorBrush(Color.FromArgb("#4D96FF"));
                     // add vibration feedback
                     if (Vibration.Default.IsSupported)
                     {
@@ -238,7 +238,7 @@ namespace FidgetSpace.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            EpTarget.Fill = ColorChoice == "Red" ? Colors.Red : Colors.Blue;
+            EpTarget.Fill = ColorChoice == "Red" ? new SolidColorBrush(Color.FromArgb("#FF6B6B")) : new SolidColorBrush(Color.FromArgb("#4D96FF"));
             ;
 
             var pillTime = ColorChoice == "Red" ? 10 : 30;

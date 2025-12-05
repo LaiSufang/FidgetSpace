@@ -13,6 +13,7 @@ namespace FidgetSpace.Views
         {
             InitializeComponent();
             BindingContext = new LoginViewModel();
+
         }
     }
 

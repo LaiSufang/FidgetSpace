@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
              x:Class="FidgetSpace.Views.UserProfilePage"
-             Title="UserProfilePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:DataType="vm:UserProfileViewModel"
+             Title="My Profile">
+
+    <TableView Intent="Data">
+        <TableRoot>
+
+            <!-- Basic Information -->
+            <TableSection Title="Basic Information">
+                <TextCell Text="Username" Detail="{Binding User.Username}" />
+                <TextCell Text="Email" Detail="{Binding User.Email}" />
+                <TextCell Text="Phone" Detail="{Binding User.Phone}" />
+            </TableSection>
+
+            <!-- Password Section -->
+            <TableSection Title="Security">
+                <TextCell Text="Password"
+                          Detail="Tap to change"
+                          Tapped="OnChangePasswordTapped"/>
+            </TableSection>
+
+        </TableRoot>
+    </TableView>
+
 </ContentPage>
