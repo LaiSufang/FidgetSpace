@@ -13,7 +13,8 @@ namespace FidgetSpace.Models.ViewModels
 
         [ObservableProperty] string username;
         [ObservableProperty] string password;
-
+        [ObservableProperty] string email;
+        [ObservableProperty] string phone;
         public SignupViewModel()
         {
             _db = new DatabaseService();
@@ -38,7 +39,10 @@ namespace FidgetSpace.Models.ViewModels
             var newUser = new User
             {
                 Username = Username,
-                Password = Password
+                Password = Password,
+                Email = Email,
+                Phone = Phone
+
             };
 
             await _db.Create(newUser);
