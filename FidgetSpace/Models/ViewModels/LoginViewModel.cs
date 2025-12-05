@@ -20,6 +20,7 @@ namespace FidgetSpace.Models.ViewModels
         public LoginViewModel()
         {
             _db = new DatabaseService();
+
         }
 
         [RelayCommand]
@@ -46,6 +47,10 @@ namespace FidgetSpace.Models.ViewModels
 
             // Navigate to home or dashboard
              await Shell.Current.GoToAsync("//HomePage");
+
+            App.LoggedInUser = user;
+            await Shell.Current.GoToAsync(nameof(UserProfilePage));
+
         }
 
         [RelayCommand]
