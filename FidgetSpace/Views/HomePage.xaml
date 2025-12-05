@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FidgetSpace.Views.HomePage"
+              Shell.NavBarIsVisible="False"
              Title="Home">
     <VerticalStackLayout HorizontalOptions="Center" Margin="0,30,0,30" Spacing="40">
-        <Label Text="Fidget Space" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" Margin="30,0,30,30"/>
+        <Label Text="Fidget Space" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" Margin="30,30,30,10"/>
         <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500" Margin="0,0,0,20"/>
         <!--add an image gallery here?-->
         
