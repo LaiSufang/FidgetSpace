@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FidgetSpace.Views.RedBluePillGamePage"
+             xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
+             x:DataType="vm:RedBluePillGameViewModel"
+             Title="Back">
+
+    <!--override the back button behavior-->
+    <!--<Shell.BackButtonBehavior>
+        <BackButtonBehavior 
+                            Command="{Binding BackCommand}"
+                            IsEnabled="True"
+                            IsVisible="True"
+                            />
+    </Shell.BackButtonBehavior>-->
+
+    <!--game UI starts here-->
+    <VerticalStackLayout Margin="35" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+        
+        <!--gameboard: a grid of tappable color pills-->
+        <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+        <!--game info / status: timer-->
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500" Margin="0,20,0,0"/>
+        <HorizontalStackLayout Spacing="20" Margin="10">
+            <Label x:Name="LbColor" Text="Target Pill:" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+            <Ellipse x:Name="EpTarget" HeightRequest="20" WidthRequest="20" Fill="#4D96FF"/>
+            <Label Text="Timer:" Margin="40,0,0,0" FontAttributes="Bold"/>
+            <Label x:Name="LbTimer" Text="{Binding RemainingSeconds, StringFormat='{0}   Seconds'}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
+        </HorizontalStackLayout>
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
+        
+    </VerticalStackLayout>
+</ContentPage>

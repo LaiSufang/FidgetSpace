@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FidgetSpace.Views.ConnectDotsPage"
+    x:Name="ConnectDotsPageRoot"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
+    xmlns:models="clr-namespace:FidgetSpace.Models"
+    BackgroundColor="#F5F5F5"
+    Title="Connect the Dots">
+
+
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Card 1: total time played across all sessions -->
+            <Frame CornerRadius="20"
+                   Padding="16"
+                   HasShadow="True"
+                   BackgroundColor="White">
+                <VerticalStackLayout Spacing="6"
+                                     HorizontalOptions="Center">
+                    <Label Text="Total Time Played:"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="{Binding TotalTimePlayedDisplay}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Card 2: time for the last / current game session -->
+            <Frame CornerRadius="20"
+                   Padding="16"
+                   HasShadow="True"
+                   BackgroundColor="White">
+                <VerticalStackLayout Spacing="6"
+                                     HorizontalOptions="Center">
+                    <Label Text="Last Game Time:"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="{Binding SessionTimeDisplay}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Remaining pairs + New Game button -->
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  VerticalOptions="Center">
+                <Label Text="Remaining Pairs:"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+
+                <Label Grid.Column="1"
+                       Text="{Binding RemainingPairs}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start" />
+
+                <Button Grid.Column="2"
+                        Text="New"
+                        Command="{Binding NewGameCommand}" />
+            </Grid>
+
+            <!-- Game area: display all dots using CollectionView -->
+            <Frame CornerRadius="20"
+                   Padding="10"
+                   HasShadow="True"
+                   BackgroundColor="White">
+
+                <CollectionView ItemsSource="{Binding Cells}"
+                                SelectionMode="None">
+
+                    <CollectionView.ItemsLayout>
+                        <!-- 6 dots per row (must match Cols in ViewModel) -->
+                        <GridItemsLayout Orientation="Vertical" Span="6" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <!-- Each item represents a ConnectDotsCell -->
+                        <DataTemplate x:DataType="models:ConnectDotsCell">
+                            <Grid Padding="4">
+                                <!-- Dot circle -->
+                                <Frame HeightRequest="46"
+                                       WidthRequest="46"
+                                       CornerRadius="23"
+                                       HasShadow="False"
+                                       BackgroundColor="{Binding ColorName}"
+                                       IsVisible="{Binding IsVisible}">
+
+                                    <!-- Tap a dot to trigger the ViewModel's TapCommand -->
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference ConnectDotsPageRoot}, Path=BindingContext.TapCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+
+                                    <Grid>
+                                        <!-- When selected, show a white border -->
+                                        <Frame BorderColor="White"
+                                               CornerRadius="23"
+                                               HasShadow="False"
+                                               Padding="0"
+                                               BackgroundColor="Transparent"
+                                               IsVisible="{Binding IsSelected}" />
+                                    </Grid>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

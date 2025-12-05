@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FidgetSpace.Views.HomePage"
+              Shell.NavBarIsVisible="False"
+             Title="Home">
+    <VerticalStackLayout HorizontalOptions="Center" Margin="0,30,0,30" Spacing="40">
+        <Label Text="Fidget Space" HorizontalTextAlignment="Center" FontSize="48" FontAttributes="Bold" Margin="30,30,30,10"/>
+        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500" Margin="0,0,0,20"/>
+        <!--add an image gallery here?-->
+        
+        <!--game list-->
+        <!-- 1. Bubble Wrap Pop-->
+        <Grid RowDefinitions="*,*"
+              ColumnDefinitions="*, auto, *"
+              ColumnSpacing="20"
+              Margin="20">
+            <!--<Image Grid.RowSpan="2" Source= "dotnet_bot.png" WidthRequest="100"/>-->
+            <Frame Grid.RowSpan="2" Background="AliceBlue" HeightRequest="100" WidthRequest="100" BorderColor="AliceBlue" CornerRadius="20">
+                <VerticalStackLayout>
+                    <Ellipse HeightRequest="50" WidthRequest="50">
+                        <Ellipse.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Offset="0.1" Color="LightGreen"/>
+                                <GradientStop Offset="1.0" Color="LightYellow"/>
+                            </LinearGradientBrush>
+                        </Ellipse.Background>
+                    </Ellipse>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Bubble Wrap Pop"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"
+                   />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="Tap, pop, repeat"
+                   FontSize="Body"
+                   />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    x:Name="BtnBubbleWrapPlay"
+                    Clicked="BtnBubbleWrapPlay_Clicked"
+                    Text="Play"
+                    WidthRequest="80"
+                    HeightRequest="80"
+                    CornerRadius="120"
+                    BackgroundColor="#6BCB77"
+                    FontAttributes="Bold"/>
+        </Grid>
+        
+        <!--2. Connecting Dots-->
+        <Grid RowDefinitions="*,*"
+              ColumnDefinitions="*, auto, *"
+              ColumnSpacing="20"
+              Margin="20">
+            <!--<Image Grid.RowSpan="2" Source= "dotnet_bot.png" WidthRequest="100"/>-->
+            <Frame Grid.RowSpan="2" Background="AliceBlue" HeightRequest="100" WidthRequest="100" BorderColor="AliceBlue" CornerRadius="20">
+                <VerticalStackLayout Spacing="-8" Margin="-10" Padding="0">
+                    <Ellipse BackgroundColor="#6BCB77" HeightRequest="25" WidthRequest="25" Margin="-30,0,0,0"/>
+                    <Ellipse BackgroundColor="MediumSlateBlue" HeightRequest="25" WidthRequest="25" Margin="0,0,-50,0"/>
+                    <Ellipse BackgroundColor="DeepSkyBlue" HeightRequest="25" WidthRequest="25" Margin="-50,10,0,-10"/>
+                    <Ellipse BackgroundColor="#FF6B6B" HeightRequest="25" WidthRequest="25" Margin="0,0,-30,0"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Connecting Dots"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"
+                   />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="Match and clear"
+                   FontSize="Body"
+                   />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    x:Name="BtnConnectingDotsPlay"
+                    Clicked="BtnConnectingDotsPlay_Clicked"
+                    Text="Play"
+                    WidthRequest="80"
+                    HeightRequest="80"
+                    CornerRadius="20"
+                    BackgroundColor="#4D96FF"
+                    FontAttributes="Bold"/>
+        </Grid>
+        
+        <!--3. Red or Blue Pill-->
+        <Grid RowDefinitions="*,*"
+              ColumnDefinitions="*, auto, *"
+              ColumnSpacing="20"
+              Margin="20">
+            <!--<Image Grid.Row="0" Source= "redbubble.png" WidthRequest="40"/>
+            <Image Grid.Row="1" Source= "bluebubble.png" WidthRequest="40" Margin="-20,-20,1,-20"/>-->
+
+            <Frame Grid.RowSpan="2" Background="AliceBlue" HeightRequest="100" WidthRequest="100" BorderColor="AliceBlue" CornerRadius="20">
+                <HorizontalStackLayout Spacing="-8" Margin="-10" Padding="0">
+                    <Ellipse HeightRequest="40" WidthRequest="40" Margin="0,10,0,0">
+                        <Ellipse.Background>
+                            <RadialGradientBrush>
+                                <GradientStop Offset="0.1" Color="Red"/>
+                                <GradientStop Offset="1.0" Color="LightPink"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Background>
+                    </Ellipse>
+                    <Ellipse HeightRequest="40" WidthRequest="40" Margin="0,-10,0,0" >
+                        <Ellipse.Background>
+                            <RadialGradientBrush>
+                                <GradientStop Offset="0.1" Color="Blue"/>
+                                <GradientStop Offset="1.0" Color="LightBlue"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Background>
+                    </Ellipse>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Red or Blue Pill"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"
+                   />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="Choose your path"
+                   FontSize="Body" 
+                   />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    x:Name="BtnRedBluePillPlay"
+                    Clicked="BtnRedBluePillPlay_Clicked"
+                    Text="Play"
+                    WidthRequest="80"
+                    HeightRequest="80"
+                    CornerRadius="50"
+                    BackgroundColor="#FF6B6B"
+                    FontAttributes="Bold"/>
+        </Grid>
+        <!--add a tap bar here?-->
+        
+        <HorizontalStackLayout VerticalOptions="End" HorizontalOptions="Center" Spacing="50" Margin="0,80,0,0">
+            <Button Text="Profile" FontAttributes="Bold" BackgroundColor="CadetBlue" CornerRadius="50" WidthRequest="80" HeightRequest="80" Clicked="Button_Clicked"/>
+            <!--<Button Text="" FontAttributes="Bold" BackgroundColor="#4D96FF" CornerRadius="50" WidthRequest="80" HeightRequest="80"/>-->
+            <!--<Ellipse HeightRequest="80" WidthRequest="80">
+                <Ellipse.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0.1" Color="LightGreen"/>
+                        <GradientStop Offset="1.0" Color="#4D96FF"/>
+                    </LinearGradientBrush>
+                </Ellipse.Background>
+            </Ellipse>-->
+            <Button Text="Settings" FontAttributes="Bold" BackgroundColor="MediumSlateBlue" CornerRadius="50" WidthRequest="80" HeightRequest="80" Clicked="Button_Clicked_1"/>
+            <Button Text="Log Out" FontAttributes="Bold" BackgroundColor="Grey" CornerRadius="50" WidthRequest="80" HeightRequest="80" Clicked="Button_Logout"/>
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

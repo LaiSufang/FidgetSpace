@@ -3,14 +3,14 @@
     x:Class="FidgetSpace.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:FidgetSpace"
+    xmlns:local="clr-namespace:FidgetSpace.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="FidgetSpace">
 
-    <!-- <ShellContent
+    <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:SignUpPage}"
-        Route="SignUpPage" /> -->
+        ContentTemplate="{DataTemplate local:Signin}"
+        Route="SignUpPage" /> 
 
     <ShellContent
     Title="Home"
@@ -38,7 +38,7 @@
                 Route="SettingsPage"
                 ContentTemplate="{DataTemplate local:SettingsPage}" />
         </Tab>
-        
+
     </TabBar>-->
 
 </Shell>
