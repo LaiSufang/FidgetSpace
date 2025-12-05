@@ -2,69 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FidgetSpace.Views.BubbleWrapPopPage"
-             Title="BubbleWrapPopPage"
-             >
-    <VerticalStackLayout>
-        <Label x:Name="ScoreLbl"
-               FontSize="32"
-               HorizontalOptions="Center"
-               Margin="0,20,0,10"/>
-        <Label Text="Pop the bubbles by tapping on them."
-               FontSize="18"
-               HorizontalOptions="Center"
-               Margin="0,0,0,20"/>
-        <Grid x:Name="GameBoard"
-              Margin="10" />
-    </VerticalStackLayout>
-
-
-    <!--TODO: create a collection of ellipse instead of hard code each one?
-    <Grid RowDefinitions="auto,*,*,*,*,*,*"
-         ColumnDefinitions="*,*,*,*"
-         HorizontalOptions="Center"
-         RowSpacing="20"
-         ColumnSpacing="20">
-
-        
-
-        <Ellipse Grid.Row="1" Grid.Column="0"
-                HeightRequest="100"
-                WidthRequest="100"              
-                >
-            <Ellipse.Background>
-                <RadialGradientBrush>
-                    <GradientStop Offset="0.1" Color="Red"/>
-                    <GradientStop Offset="1.0" Color="LightPink"/>
-                </RadialGradientBrush>
-            </Ellipse.Background>
-        </Ellipse>
-
-
-        <Ellipse Grid.Row="3" Grid.Column="1"
-                HeightRequest="100"
-                WidthRequest="100"
-                >
-            <Ellipse.Background>
-                <RadialGradientBrush>
-                    <GradientStop Offset="0.1" Color="Blue"/>
-                    <GradientStop Offset="1.0" Color="LightBlue"/>
-                </RadialGradientBrush>
-            </Ellipse.Background>
-        </Ellipse>
-
-
-        <Ellipse Grid.Row="2" Grid.Column="3"
-                HeightRequest="100"
-                WidthRequest="100"
-                >
-            <Ellipse.Background>
-                <RadialGradientBrush>
-                    <GradientStop Offset="0.1" Color="Green"/>
-                    <GradientStop Offset="1.0" Color="LightGreen"/>
-                </RadialGradientBrush>
-            </Ellipse.Background>
-        </Ellipse>
-
-
-    </Grid> -->
+             xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
+             xmlns:models="clr-namespace:FidgetSpace.Models"
+             x:DataType="vm:BubbleWrapPopViewModel">
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout>
+            <VerticalStackLayout BackgroundColor="#E8FFF5">
+                <Label Text="Bubble Wrap Pop"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="MediumAquamarine"
+                   HorizontalOptions="Center"
+                   Margin="0,20,0,10"/>
+                <Label Text="Pop the bubbles by tapping on them."
+                   FontSize="18"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20"/>
+            </VerticalStackLayout>
+            <Grid x:Name="GameBoard"
+                  Margin="10" 
+                  BackgroundColor="White"
+                  />
+        </VerticalStackLayout>
+        <Grid Grid.Row="1"
+              
+              Padding="16"
+              BackgroundColor="#F7F7F7"
+              RowDefinitions="*,*">
+            <Label Text="{Binding TotalTime, StringFormat='Total Play Time: {0}s'}" />
+            <Label Grid.Row ="1" Text="{Binding Score, StringFormat='Score: {0}'}" />
+            <!--<Label x:Name="ScoreLbl"
+               FontSize="14"
+               VerticalOptions="Center" />
+            <Label x:Name="TimerLbl"
+               Grid.Column="1"
+               FontSize="14"
+               VerticalOptions="Center"
+               HorizontalTextAlignment="End" />-->
+        </Grid>
+    </Grid>
 </ContentPage>

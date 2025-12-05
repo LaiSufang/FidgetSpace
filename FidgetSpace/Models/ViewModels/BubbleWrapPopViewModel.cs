@@ -1,12 +1,20 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FidgetSpace.Models.ViewModels
+namespace FidgetSpace.Models.ViewModels;
+
+partial class BubbleWrapPopViewModel : ObservableObject
 {
-    class BubbleWrapPopViewModel
-    {
-    }
+    [ObservableProperty]
+    private int score;
+
+    [ObservableProperty]
+    private int highScore;
+
+    [ObservableProperty]
+    private double totalTime;
 }
