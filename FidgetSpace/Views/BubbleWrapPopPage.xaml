@@ -7,6 +7,7 @@
              x:DataType="vm:BubbleWrapPopViewModel">
     <Grid RowDefinitions="Auto,*">
         <VerticalStackLayout>
+            <VerticalStackLayout BackgroundColor="#E8FFF5">
             <Label Text="Bubble Wrap Pop"
                    FontSize="24"
                    FontAttributes="Bold"
@@ -15,17 +16,22 @@
                    Margin="0,20,0,10"/>
             <Label Text="Pop the bubbles by tapping on them."
                    FontSize="18"
+                   HorizontalTextAlignment="Center"
                    HorizontalOptions="Center"
                    Margin="0,0,0,20"/>
+            </VerticalStackLayout>
             <Grid x:Name="GameBoard"
-                  Margin="10" />
+                  Margin="10" 
+                  BackgroundColor="White"
+                  />
         </VerticalStackLayout>
         <Grid Grid.Row="1"
-          Padding="16"
-          BackgroundColor="#F7F7F7"
-          ColumnDefinitions="*,*">
-            <Label Text="{Binding Score, StringFormat='Score: {0}'}" />
-            <Label Grid.Column ="1" Text="{Binding TotalTime, StringFormat='Total Play Time: {0}s'}" />
+              
+              Padding="16"
+              BackgroundColor="#F7F7F7"
+              RowDefinitions="*,*">
+            <Label Text="{Binding TotalTime, StringFormat='Total Play Time: {0}s'}" />
+            <Label Grid.Row ="1" Text="{Binding Score, StringFormat='Score: {0}'}" />
             <!--<Label x:Name="ScoreLbl"
                FontSize="14"
                VerticalOptions="Center" />

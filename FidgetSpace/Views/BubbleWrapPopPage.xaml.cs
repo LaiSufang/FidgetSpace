@@ -105,10 +105,14 @@ namespace FidgetSpace.Views
 
             if (currentBubbles == 0) // No more bubbles left
             {
+                if (Vibration.Default.IsSupported)
+                {
+                    Vibration.Default.Vibrate();
+                }
                 timer.Stop();
                 bwp_VM.TotalTime = bwp_GameTime; 
                 bool playAgain = await DisplayAlert("Congrats!", $"You popped all the bubbles in {bwp_VM.TotalTime} seconds", "Play again?", "Go Home");
-                Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50));
+                
 
                 if (playAgain)
                 {
