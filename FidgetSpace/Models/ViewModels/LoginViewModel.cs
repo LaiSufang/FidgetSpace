@@ -7,6 +7,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FidgetSpace.Services;
 using FidgetSpace.Views;
+using Plugin.Maui.Audio;
+using System.Diagnostics;
 
 namespace FidgetSpace.Models.ViewModels
 {
@@ -49,9 +51,20 @@ namespace FidgetSpace.Models.ViewModels
              await Shell.Current.GoToAsync("//HomePage");
 
             App.LoggedInUser = user;
-            await Shell.Current.GoToAsync("//HomePage");
+            var app = Application.Current as App;
+            if (app?.MusicService != null)
+            {
+                app.MusicService.SetVolume(user.MusicVolume);
+                if (user.MusicEnabled)
+                    await app.MusicService.Play();
+                else
+                    app.MusicService.Pause();
+            }
 
+            await Shell.Current.GoToAsync(nameof(UserProfilePage));
         }
+
+
 
         [RelayCommand]
         public async Task GoToSignup()
