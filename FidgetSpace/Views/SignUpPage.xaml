@@ -43,7 +43,6 @@
             <Entry Placeholder="Phone"
                 Text="{Binding Phone}"
                 IsPassword="True"
-                BackgroundColor="White"
                 HeightRequest="50"
                 />      
 
