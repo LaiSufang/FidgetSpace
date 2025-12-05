@@ -20,5 +20,7 @@ namespace FidgetSpace.Models
         public string Email { get; set; }
 
         public string Phone { get; set; }
+        public bool MusicEnabled { get; set; } = false;
+        public double MusicVolume { get; set; } = 0.5;
     }
 }

@@ -9,6 +9,7 @@ namespace FidgetSpace
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(SignupPage), typeof(SignupPage));
+
             Routing.RegisterRoute(nameof(ConnectDotsPage), typeof(ConnectDotsPage));
             Routing.RegisterRoute(nameof(UserProfilePage), typeof(UserProfilePage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));

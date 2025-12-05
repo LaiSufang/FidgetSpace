@@ -38,13 +38,11 @@
                    />
             <Entry Placeholder="Email"
                 Text="{Binding Email}"
-                IsPassword="True"
                 BackgroundColor="White"
                 HeightRequest="50"
                 />
             <Entry Placeholder="Phone"
                 Text="{Binding Phone}"
-                IsPassword="True"
                 BackgroundColor="White"
                 HeightRequest="50"
                 />      
