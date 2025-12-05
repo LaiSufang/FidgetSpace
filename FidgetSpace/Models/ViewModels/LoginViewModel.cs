@@ -61,7 +61,7 @@ namespace FidgetSpace.Models.ViewModels
                     app.MusicService.Pause();
             }
 
-            await Shell.Current.GoToAsync(nameof(UserProfilePage));
+            await Shell.Current.GoToAsync("//HomePage");
         }
 
 
