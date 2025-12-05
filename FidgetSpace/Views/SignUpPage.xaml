@@ -11,49 +11,47 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#1E3C72" Offset="0.0"/>
-                <GradientStop Color="#2A5298" Offset="1.0"/>
+                <GradientStop Color="CadetBlue" Offset="0.0"/>
+                <GradientStop Color="MediumSlateBlue" Offset="1.0"/>
             </LinearGradientBrush>
         </Grid.Background>
 
-        <VerticalStackLayout VerticalOptions="Center" Spacing="15">
+        <VerticalStackLayout VerticalOptions="Center"  Spacing="30">
 
             <Label Text="CREATE ACCOUNT"
                    HorizontalOptions="Center"
                    FontSize="32"
                    TextColor="White"
-                   FontAttributes="Bold"/>
+                   FontAttributes="Bold"
+                   Margin="0,0,0,30"
+                   />
 
             <Entry Placeholder="Username"
                    Text="{Binding Username}"
-                   BackgroundColor="White"
                    HeightRequest="50"
                    />
 
             <Entry Placeholder="Password"
                    Text="{Binding Password}"
                    IsPassword="True"
-                   BackgroundColor="White"
                    HeightRequest="50"
                    />
             <Entry Placeholder="Email"
                 Text="{Binding Email}"
-                IsPassword="True"
-                BackgroundColor="White"
                 HeightRequest="50"
                 />
             <Entry Placeholder="Phone"
                 Text="{Binding Phone}"
-                IsPassword="True"
-                BackgroundColor="White"
                 HeightRequest="50"
                 />      
 
             <Button Text="Sign Up"
                     Command="{Binding SignupCommand}"
-                    BackgroundColor="#1E3C72"
+                    BackgroundColor="CadetBlue"
                     TextColor="White"
-                    
+                    Margin="0,30,0,0"
+                    FontAttributes="Bold"
+                    FontSize="Medium"
                     HeightRequest="50"/>
 
         </VerticalStackLayout>

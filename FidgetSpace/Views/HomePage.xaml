@@ -148,7 +148,7 @@
         </Grid>
         <!--add a tap bar here?-->
         
-        <HorizontalStackLayout VerticalOptions="End" HorizontalOptions="Center" Spacing="-10" Margin="0,80,0,0">
+        <HorizontalStackLayout VerticalOptions="End" HorizontalOptions="Center" Spacing="50" Margin="0,80,0,0">
             <Button Text="Profile" FontAttributes="Bold" BackgroundColor="CadetBlue" CornerRadius="50" WidthRequest="80" HeightRequest="80" Clicked="Button_Clicked"/>
             <!--<Button Text="" FontAttributes="Bold" BackgroundColor="#4D96FF" CornerRadius="50" WidthRequest="80" HeightRequest="80"/>-->
             <!--<Ellipse HeightRequest="80" WidthRequest="80">
@@ -160,6 +160,7 @@
                 </Ellipse.Background>
             </Ellipse>-->
             <Button Text="Settings" FontAttributes="Bold" BackgroundColor="MediumSlateBlue" CornerRadius="50" WidthRequest="80" HeightRequest="80" Clicked="Button_Clicked_1"/>
+            <Button Text="Log Out" FontAttributes="Bold" BackgroundColor="Grey" CornerRadius="50" WidthRequest="80" HeightRequest="80" Clicked="Button_Logout"/>
         </HorizontalStackLayout>
 
     </VerticalStackLayout>

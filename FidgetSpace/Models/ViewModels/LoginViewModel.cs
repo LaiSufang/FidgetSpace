@@ -49,7 +49,7 @@ namespace FidgetSpace.Models.ViewModels
              await Shell.Current.GoToAsync("//HomePage");
 
             App.LoggedInUser = user;
-            await Shell.Current.GoToAsync(nameof(UserProfilePage));
+            await Shell.Current.GoToAsync("//HomePage");
 
         }
 
