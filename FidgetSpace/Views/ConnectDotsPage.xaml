@@ -1,82 +1,123 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="FidgetSpace.Views.ConnectDotsPage"
+    x:Name="ConnectDotsPageRoot"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
     xmlns:models="clr-namespace:FidgetSpace.Models"
+    BackgroundColor="#F5F5F5"
     Title="Connect the Dots">
 
-    <!-- 这里直接在 XAML 里创建 ViewModel 作为 BindingContext -->
-    <ContentPage.BindingContext>
-        <vm:ConnectDotsViewModel />
-    </ContentPage.BindingContext>
-
-    <VerticalStackLayout Padding="16" Spacing="10">
-
-        <!-- 顶部：显示剩余对数 + New 按钮 -->
-        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-            <Label Text="Remaining Pairs:"
-                   FontAttributes="Bold"
-                   VerticalOptions="Center" />
-
-            <Label Grid.Column="1"
-                   Text="{Binding RemainingPairs}"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Start" />
-
-            <Button Grid.Column="2"
-                    Text="New"
-                    Command="{Binding NewGameCommand}" />
-        </Grid>
-
-        <!-- 游戏区域：用 CollectionView 显示所有点 -->
-        <CollectionView ItemsSource="{Binding Cells}"
-                        SelectionMode="None">
-            <CollectionView.ItemsLayout>
-                <!-- 一行多少个：这里和 ViewModel 里的 Cols 对应（6 列） -->
-                <GridItemsLayout Orientation="Vertical" Span="6" />
-            </CollectionView.ItemsLayout>
-
-            <CollectionView.ItemTemplate>
-                <!-- 每一个 item 是一颗 ConnectDotsCell -->
-                <DataTemplate x:DataType="models:ConnectDotsCell">
-                    <Grid Padding="4">
-                        <Frame HeightRequest="46"
-                               WidthRequest="46"
-                               CornerRadius="23"
-                               HasShadow="False"
-                               BackgroundColor="{Binding ColorName}"
-                               IsVisible="{Binding IsVisible}">
-                            <!-- 点击一颗点，触发 ViewModel 的 TapCommand -->
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.TapCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Frame.GestureRecognizers>
-
-                            <Grid>
-                                <!-- 被选中的点：显示白色边框 -->
-                                <Frame BorderColor="White"
-                                    CornerRadius="23"
-                                    HasShadow="False"
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    IsVisible="{Binding IsSelected}" />
 
 
-                                <!-- Power 点：中间画一个星星 -->
-                                <Label Text="X"
-                                       FontSize="16"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       IsVisible="{Binding IsPower}" />
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Card 1: total time played across all sessions -->
+            <Frame CornerRadius="20"
+                   Padding="16"
+                   HasShadow="True"
+                   BackgroundColor="White">
+                <VerticalStackLayout Spacing="6"
+                                     HorizontalOptions="Center">
+                    <Label Text="Total Time Played:"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="{Binding TotalTimePlayedDisplay}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Card 2: time for the last / current game session -->
+            <Frame CornerRadius="20"
+                   Padding="16"
+                   HasShadow="True"
+                   BackgroundColor="White">
+                <VerticalStackLayout Spacing="6"
+                                     HorizontalOptions="Center">
+                    <Label Text="Last Game Time:"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="{Binding SessionTimeDisplay}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Remaining pairs + New Game button -->
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  VerticalOptions="Center">
+                <Label Text="Remaining Pairs:"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+
+                <Label Grid.Column="1"
+                       Text="{Binding RemainingPairs}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start" />
+
+                <Button Grid.Column="2"
+                        Text="New"
+                        Command="{Binding NewGameCommand}" />
+            </Grid>
+
+            <!-- Game area: display all dots using CollectionView -->
+            <Frame CornerRadius="20"
+                   Padding="10"
+                   HasShadow="True"
+                   BackgroundColor="White">
+
+                <CollectionView ItemsSource="{Binding Cells}"
+                                SelectionMode="None">
+
+                    <CollectionView.ItemsLayout>
+                        <!-- 6 dots per row (must match Cols in ViewModel) -->
+                        <GridItemsLayout Orientation="Vertical" Span="6" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <!-- Each item represents a ConnectDotsCell -->
+                        <DataTemplate x:DataType="models:ConnectDotsCell">
+                            <Grid Padding="4">
+                                <!-- Dot circle -->
+                                <Frame HeightRequest="46"
+                                       WidthRequest="46"
+                                       CornerRadius="23"
+                                       HasShadow="False"
+                                       BackgroundColor="{Binding ColorName}"
+                                       IsVisible="{Binding IsVisible}">
+
+                                    <!-- Tap a dot to trigger the ViewModel's TapCommand -->
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference ConnectDotsPageRoot}, Path=BindingContext.TapCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+
+                                    <Grid>
+                                        <!-- When selected, show a white border -->
+                                        <Frame BorderColor="White"
+                                               CornerRadius="23"
+                                               HasShadow="False"
+                                               Padding="0"
+                                               BackgroundColor="Transparent"
+                                               IsVisible="{Binding IsSelected}" />
+                                    </Grid>
+                                </Frame>
                             </Grid>
-                        </Frame>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
 
-    </VerticalStackLayout>
+                </CollectionView>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

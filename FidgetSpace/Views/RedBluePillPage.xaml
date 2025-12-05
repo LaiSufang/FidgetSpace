@@ -28,7 +28,7 @@
 
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10" VerticalOptions="Center">
-            <Ellipse x:Name="EpRed" HeightRequest="100" WidthRequest="100" Fill="Red">
+            <Ellipse x:Name="EpRed" HeightRequest="100" WidthRequest="100" Fill="#FF6B6B">
                 <Ellipse.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Ellipse.GestureRecognizers>
@@ -39,13 +39,13 @@
 
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10" VerticalOptions="Center">
-            <Ellipse x:Name="EpBlue" HeightRequest="100" WidthRequest="100" Fill="Blue">
+            <Ellipse x:Name="EpBlue" HeightRequest="100" WidthRequest="100" Fill="#4D96FF">
                 <Ellipse.GestureRecognizers>
                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1"/>
                 </Ellipse.GestureRecognizers>
             </Ellipse>
 
-            <Label Text="Blue Pill" HorizontalOptions="Center" FontSize="Body" FontAttributes="Bold" TextColor="Blue"/>
+            <Label Text="Blue Pill" HorizontalOptions="Center" FontSize="Body" FontAttributes="Bold" TextColor="DodgerBlue"/>
         
         </VerticalStackLayout>
 

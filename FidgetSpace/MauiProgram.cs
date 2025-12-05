@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FidgetSpace.Services;
+using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 
 namespace FidgetSpace
 {
@@ -17,6 +19,10 @@ namespace FidgetSpace
 
 #if DEBUG
     		builder.Logging.AddDebug();
+            builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddSingleton(AudioManager.Current);
+            builder.Services.AddSingleton<MusicService>();
+            builder.Services.AddSingleton<App>();
 #endif
 
             return builder.Build();
