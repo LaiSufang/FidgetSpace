@@ -122,18 +122,6 @@ namespace FidgetSpace.Models.ViewModels
             if (stopwatch.IsRunning)
                 stopwatch.Stop();
         }
-        public async Task SaveUserGameStats(string choice)
-{
-    var currentUser = await _db.GetById(App.LoggedInUserId);
-
-    if (currentUser != null)
-    {
-        currentUser.LastGameDuration = TimeSpentSeconds;
-        currentUser.LastPillChoice = choice;
-        currentUser.LastGamePlayed = DateTime.Now;
-
-        await _db.Update(currentUser);
-    }
-}
+       
     }
 }

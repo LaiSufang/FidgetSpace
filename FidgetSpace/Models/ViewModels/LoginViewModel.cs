@@ -54,7 +54,7 @@ namespace FidgetSpace.Models.ViewModels
             var app = Application.Current as App;
             if (app?.MusicService != null)
             {
-                app.MusicService.SetVolume(user.MusicVolume);
+              
                 if (user.MusicEnabled)
                     await app.MusicService.Play();
                 else

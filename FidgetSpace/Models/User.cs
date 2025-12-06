@@ -32,8 +32,5 @@ namespace FidgetSpace.Models
         public string Phone { get; set; }
         public bool MusicEnabled { get; set; } = false;
         public double MusicVolume { get; set; } = 0.5;
-        public int LastGameDuration { get; set; }          // seconds spent
-        public string LastPillChoice { get; set; }         // "Red" or "Blue"
-        public DateTime LastGamePlayed { get; set; }
     }
 }
