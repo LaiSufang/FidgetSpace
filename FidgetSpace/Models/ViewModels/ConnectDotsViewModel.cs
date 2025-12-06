@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using static SQLite.TableMapping;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using FidgetSpace;
 
 
 namespace FidgetSpace.Models.ViewModels
@@ -148,21 +149,31 @@ namespace FidgetSpace.Models.ViewModels
             NewGameCommand = new Command(GenerateBoard);
             TapCommand = new Command<ConnectDotsCell>(OnTap);
 
-            // Read the cumulative total duration (in seconds) from the local storage.
-            totalTimePlayedSeconds = Preferences.Get("ConnectDots_TotalTimeSeconds", 0);
+            // Initialize cumulative game time: prioritize reading from the currently logged-in user
+            if (App.LoggedInUser != null)
+            {
+                // Read the previously accumulated DOT game time from the currently logged-in user object
+                totalTimePlayedSeconds = App.LoggedInUser.TotalTimeDotSeconds;
+            }
+            else
+            {
+                // If no user is logged in, treat it as 0
+                totalTimePlayedSeconds = 0;
+            }
+
+            // Total Time Display
             TotalTimePlayedDisplay = TimeSpan
                 .FromSeconds(totalTimePlayedSeconds)
                 .ToString(@"hh\:mm\:ss");
 
-            // Initialize the game time to 00:00:00
+            // The game clock is initialized to 00:00:00
             SessionTimeDisplay = TimeSpan
                 .FromSeconds(0)
                 .ToString(@"hh\:mm\:ss");
 
-
-
             GenerateBoard();
         }
+
 
         /// <summary>
         /// Called when the page loads, starting the session timer (now triggered by the first click)
@@ -205,7 +216,7 @@ namespace FidgetSpace.Models.ViewModels
         /// </summary>
         public void StopAndSaveTimer()
         {
-            // If the game hasn't started timing at all, there's no need to save.
+            // If the timer never started, there's no need to save it
             if (!_isTimerRunning)
                 return;
 
@@ -216,22 +227,36 @@ namespace FidgetSpace.Models.ViewModels
             if (sessionSeconds <= 0)
                 return;
 
-            // When pausing, display the final time used for this game.
+            // Display the final time used for this game
             SessionTimeDisplay = TimeSpan
                 .FromSeconds(sessionSeconds)
                 .ToString(@"hh\:mm\:ss");
 
-            // Accumulated to total duration
+            // Add the current frame time to the total time (a variable in memory)
             totalTimePlayedSeconds += sessionSeconds;
 
-            // Save to local
-            Preferences.Set("ConnectDots_TotalTimeSeconds", totalTimePlayedSeconds);
+            // If there is a currently logged-in user, write the time back to the User and database.
+            if (App.LoggedInUser != null)
+            {
+                // Update the current user's total DOT game playtime
+                App.LoggedInUser.TotalTimeDotSeconds = totalTimePlayedSeconds;
 
-            // Update the display once more (to ensure the latest value is shown when it stops).
+                // Simultaneously update the total game time (DOT + Bubble)
+                App.LoggedInUser.TotalTimePlayedSeconds =
+                    App.LoggedInUser.TotalTimeDotSeconds +
+                    App.LoggedInUser.TotalTimeBubbleSeconds+
+                    App.LoggedInUser.TotalTimePillSeconds;
+
+                // Asynchronous database updates (without await)
+                _ = App.Database.Update(App.LoggedInUser);
+            }
+
+            // Update the total time display once more to ensure it shows the latest value when stopped.
             TotalTimePlayedDisplay = TimeSpan
                 .FromSeconds(totalTimePlayedSeconds)
                 .ToString(@"hh\:mm\:ss");
         }
+
 
 
 
@@ -372,7 +397,7 @@ namespace FidgetSpace.Models.ViewModels
                 try
                 {
 #if ANDROID || IOS
-            Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(300));  // 震动 0.3 秒
+            Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(300));  // 0.3 senconds vibration
 #endif
                 }
                 catch (FeatureNotSupportedException)
