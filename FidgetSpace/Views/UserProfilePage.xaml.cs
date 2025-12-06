@@ -32,6 +32,17 @@ namespace FidgetSpace.Views
                 await DisplayAlert("Success", "Password updated!", "OK");
             }
         }
+        public async Task LoadStats()
+        {
+            var user = App.LoggedInUser;
+
+            if (user != null)
+            {
+                LastGameDuration = user.LastGameDuration;
+                LastPillChoice = user.LastPillChoice;
+                LastGamePlayed = user.LastGamePlayed;
+            }
+        }
 
     }
 }

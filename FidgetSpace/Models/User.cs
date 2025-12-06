@@ -13,6 +13,9 @@ namespace FidgetSpace.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
+        public string LoggedInUser { get; set; }
+        public int LoggedInUserId { get; set; }
+
         [Unique]
         public string Username { get; set; }
 

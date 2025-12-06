@@ -1,5 +1,6 @@
 ﻿using FidgetSpace.Models;
 using FidgetSpace.Services;
+using FidgetSpace.Models;
 
 namespace FidgetSpace
 {
@@ -7,8 +8,8 @@ namespace FidgetSpace
     {
         public static DatabaseService Database { get; private set; }
 
-        public static User LoggedInUser { get; set; }
 
+        public static User LoggedInUser { get; set; }
         public MusicService MusicService { get; }
 
         public App(MusicService musicService)
