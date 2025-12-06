@@ -126,7 +126,11 @@ namespace FidgetSpace.Views
                     {
                         bwp_VM.HighScore = bwp_VM.Score;
                     }
-                    // bwp_VM.TotalTime = bwp_TotalTime;
+                    
+                    var userlogininfo = App.LoggedInUser;
+                    userlogininfo.TotalBubbleGameTime += bwp_VM.TotalTime;
+                    await App.Database.Update(userlogininfo);
+
                     isNavigatingHome = true;
                     await Shell.Current.GoToAsync("///HomePage");
                 }

@@ -41,7 +41,12 @@ namespace FidgetSpace.Models.ViewModels
                 Username = Username,
                 Password = Password,
                 Email = Email,
-                Phone = Phone
+                Phone = Phone,
+                MusicEnabled = false,
+                MusicVolume = 0.5,
+                TotalBubbleGameTime = 0,
+                TotalConnectGameTime = 0,
+                TotalDotGameTime = 0
 
             };
 

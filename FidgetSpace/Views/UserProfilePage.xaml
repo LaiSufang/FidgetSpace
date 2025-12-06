@@ -14,8 +14,10 @@
                 <TextCell Text="Username" Detail="{Binding User.Username}" />
                 <TextCell Text="Email" Detail="{Binding User.Email}" />
                 <TextCell Text="Phone" Detail="{Binding User.Phone}" />
+                
             </TableSection>
 
+            
             <!-- Password Section -->
             <TableSection Title="Security">
                 <TextCell Text="Password"
