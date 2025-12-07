@@ -1,4 +1,10 @@
+using FidgetSpace.Models.ViewModels;
+using FidgetSpace.Views;
+using System;
+using FidgetSpace.Models;
+using FidgetSpace.Models;
 namespace FidgetSpace.Views
+
 {
 
 
@@ -31,7 +37,11 @@ namespace FidgetSpace.Views
 
         private async void Button_Clicked_1(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(nameof(SettingsPage));
+            await Shell.Current.Navigation.PushAsync(
+                new SettingsPage(
+                    new SettingsViewModel(((App)Application.Current).MusicService, App.Database)
+                )
+            );
         }
 
         private async void Button_Logout(object sender, EventArgs e)

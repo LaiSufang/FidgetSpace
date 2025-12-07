@@ -4,20 +4,66 @@
              xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
              x:Class="FidgetSpace.Views.SettingsPage">
 
-    <VerticalStackLayout Padding="30" Spacing="20">
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="30">
 
+            <!-- SECTION: Relaxing Music -->
             <Label Text="Relaxing Music Settings"
-               FontSize="24"
-               HorizontalOptions="Center" />
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#1E3C72" />
 
-            <Switch IsToggled="{Binding MusicEnabled}" />
-            <Label Text="Enable Background Music" />
+            <Frame Padding="20"
+                   CornerRadius="15"
+                   BackgroundColor="#F7F7FB">
 
-            <Button Text="Save Preferences"
-                Command="{Binding SaveCommand}"
-                BackgroundColor="#1E3C72"
-                TextColor="White" />
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Enable Background Music"
+                           FontSize="16"
+                           TextColor="#333" />
 
-     </VerticalStackLayout>
+                    <Switch IsToggled="{Binding MusicEnabled}" />
+
+                    <Button Text="Save Preferences"
+                            Command="{Binding SaveCommand}"
+                            BackgroundColor="#1E3C72"
+                            TextColor="White"
+                            CornerRadius="10" />
+                </VerticalStackLayout>
+
+            </Frame>
+
+            <!-- SECTION: Security -->
+            <Label Text="Security"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#1E3C72" />
+
+            <Frame Padding="20"
+                   CornerRadius="15"
+                   BackgroundColor="#F7F7FB">
+
+                <Grid ColumnDefinitions="*, Auto">
+
+                    <Label Text="Password"
+                           FontSize="16"
+                           TextColor="#333" />
+
+                    <Label Text="Tap to change"
+                           Grid.Column="1"
+                           FontSize="16"
+                           TextColor="#4A3AFF"
+                           FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChangePasswordTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </Grid>
+
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
-
