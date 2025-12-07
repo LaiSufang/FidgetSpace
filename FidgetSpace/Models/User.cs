@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace FidgetSpace.Models
 {
     public class User
@@ -13,35 +14,25 @@ namespace FidgetSpace.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public string LoggedInUser { get; set; }
-        public int LoggedInUserId { get; set; }
-
-        [Unique]
+        // Basic account info
         public string Username { get; set; }
-
         public string Password { get; set; }
-
-        public string ConfirmPassword { get; set; }
-
         public string Email { get; set; }
-
         public string Phone { get; set; }
 
-        // music setting
-        public bool MusicEnabled { get; set; } = false;
-        public double MusicVolume { get; set; } = 0.5;
+        // Total game time statistics (seconds)
+        public int TotalTimePlayedSeconds { get; set; }
+        public int TotalTimeBubbleSeconds { get; set; }
+        public int TotalTimeDotSeconds { get; set; }
+        public int TotalTimePillSeconds { get; set; }
 
-        // ==== New: Total Game Duration Related ====
-        // Total duration of all games (seconds)
-        public int TotalTimePlayedSeconds { get; set; } = 0;
+        // Last Pill Game Info
+        public int LastGameDuration { get; set; }        // Duration of last pill game
+        public string LastPillChoice { get; set; } = ""; // "Red" or "Blue"
+        public DateTime? LastGamePlayed { get; set; }    // Last time played pill game
 
-        // Bubble Game Total Duration (seconds)
-        public int TotalTimeBubbleSeconds { get; set; } = 0;
-
-        // Red / Blue Pill Game Total Playtime
-        public int TotalTimePillSeconds { get; set; } = 0;
-
-        // Connect the Dots Game Total Duration (seconds)
-        public int TotalTimeDotSeconds { get; set; } = 0;
+        // Background Music Settings
+        public bool MusicEnabled { get; set; } = true;   // Music ON by default
+        public double MusicVolume { get; set; } = 0.5;   // 50% volume by default
     }
 }

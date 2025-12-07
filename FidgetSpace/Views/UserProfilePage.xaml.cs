@@ -10,8 +10,10 @@ namespace FidgetSpace.Views
         {
             InitializeComponent();
 
-            var userlogininfo = App.LoggedInUser; // store this when user logs in
-            BindingContext = new UserProfileViewModel(userlogininfo);
+            // Pass logged-in user into ViewModel
+            var userLoginInfo = App.LoggedInUser;
+
+            BindingContext = new UserProfileViewModel(userLoginInfo);
         }
 
         private async void OnChangePasswordTapped(object sender, EventArgs e)
@@ -25,14 +27,15 @@ namespace FidgetSpace.Views
             if (!string.IsNullOrEmpty(newPass))
             {
                 var vm = (UserProfileViewModel)BindingContext;
+
+                // Update password in memory
                 vm.User.Password = newPass;
 
+                // Save to database
                 await App.Database.Update(vm.User);
 
                 await DisplayAlert("Success", "Password updated!", "OK");
             }
         }
-       
-
     }
 }

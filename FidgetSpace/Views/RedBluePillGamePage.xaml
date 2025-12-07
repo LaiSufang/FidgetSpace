@@ -4,32 +4,58 @@
              x:Class="FidgetSpace.Views.RedBluePillGamePage"
              xmlns:vm="clr-namespace:FidgetSpace.Models.ViewModels"
              x:DataType="vm:RedBluePillGameViewModel"
-             Title="Back">
+             Title="Back"
+             Shell.NavBarIsVisible="False">
 
-    <!--override the back button behavior-->
-    <!--<Shell.BackButtonBehavior>
-        <BackButtonBehavior 
-                            Command="{Binding BackCommand}"
-                            IsEnabled="True"
-                            IsVisible="True"
-                            />
-    </Shell.BackButtonBehavior>-->
+    <!-- Game UI starts here -->
+    <VerticalStackLayout Margin="35"
+                         Spacing="20"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center">
 
-    <!--game UI starts here-->
-    <VerticalStackLayout Margin="35" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-        
-        <!--gameboard: a grid of tappable color pills-->
-        <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Center"/>
+        <!-- 🔙 Back button to return to the previous page (RedBluePillPage) -->
+        <Button Text="Back"
+                HeightRequest="40"
+                WidthRequest="100"
+                HorizontalOptions="Start"
+                BackgroundColor="Lavender"
+                TextColor="Black"
+                CornerRadius="20"
+                Clicked="BackButton_Clicked"
+                Margin="0,0,0,10" />
 
-        <!--game info / status: timer-->
-        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500" Margin="0,20,0,0"/>
+        <!-- Gameboard: a grid of tappable color pills -->
+        <Grid x:Name="GameBoard"
+              HorizontalOptions="Center"
+              VerticalOptions="Center" />
+
+        <!-- Game info / status: timer -->
+        <BoxView Color="AliceBlue"
+                 HeightRequest="2"
+                 WidthRequest="500"
+                 Margin="0,20,0,0" />
+
         <HorizontalStackLayout Spacing="20" Margin="10">
-            <Label x:Name="LbColor" Text="Target Pill:" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
-            <Ellipse x:Name="EpTarget" HeightRequest="20" WidthRequest="20" Fill="#4D96FF"/>
-            <Label Text="Timer:" Margin="40,0,0,0" FontAttributes="Bold"/>
-            <Label x:Name="LbTimer" Text="{Binding RemainingSeconds, StringFormat='{0}   Seconds'}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
+            <Label x:Name="LbColor"
+                   Text="Target Pill:"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Start" />
+            <Ellipse x:Name="EpTarget"
+                     HeightRequest="20"
+                     WidthRequest="20"
+                     Fill="#4D96FF" />
+            <Label Text="Timer:"
+                   Margin="40,0,0,0"
+                   FontAttributes="Bold" />
+            <Label x:Name="LbTimer"
+                   Text="{Binding RemainingSeconds, StringFormat='{0}   Seconds'}"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="End" />
         </HorizontalStackLayout>
-        <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
-        
+
+        <BoxView Color="AliceBlue"
+                 HeightRequest="2"
+                 WidthRequest="500" />
+
     </VerticalStackLayout>
 </ContentPage>
