@@ -1,17 +1,23 @@
-﻿using FidgetSpace.Models;
-using FidgetSpace;          // App.LoggedInUser / App.Database
-using System.Diagnostics;   //Stopwatch
-
+using FidgetSpace.Models;
+using FidgetSpace.Models.ViewModels;
+using System.Runtime.CompilerServices;
 
 namespace FidgetSpace.Views
 {
     public partial class BubbleWrapPopPage : ContentPage
     {
-        public int score = 0;
-        private readonly int rows = 6;
-        private readonly int columns = 4;
-        private readonly int totalBubbles = 6;
+        public int bwp_Score = 0;
+        public int bwp_GameTime = 0;
+        public double bwp_TotalTime = 0;
+        public int currentBubbles;
+        IDispatcherTimer timer;
+        private int rows = 6;
+        private int columns = 4;
+        private int cellSize = 70;
+        private int totalBubbles = 6;
         private List<Bubble> bubbles = new List<Bubble>();
+        BubbleWrapPopViewModel bwp_VM = new BubbleWrapPopViewModel();
+        private bool isNavigatingHome = false; // Flag to raise alert on going back 
 
         //  ==== Timing-Related ====
         private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -27,100 +33,169 @@ namespace FidgetSpace.Views
         public BubbleWrapPopPage()
         {
             InitializeComponent();
-            ScoreLbl.Text = $"Score: {score}";
+            BindingContext = bwp_VM;
+            timer = Dispatcher.CreateTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += OnTimerTick;
+            timer.Start();
+            // ScoreLbl.Text = $"Score: {bwp_Score}";
 
-            // ==== Total duration of previous Bubbles loaded for the currently logged-in user ====
-            if (App.LoggedInUser != null)
-            {
-                totalTimeBubbleSeconds = App.LoggedInUser.TotalTimeBubbleSeconds;
-            }
-            else
-            {
-                totalTimeBubbleSeconds = 0;
-            }
-
-            // Creates Rows
+            var boardWidth = rows * cellSize;
+            var boardHeight = columns * cellSize;
             for (int i = 0; i < rows; i++)
             {
-                GameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                GameBoard.RowDefinitions.Add(new RowDefinition { Height = new GridLength(cellSize, GridUnitType.Absolute) });
+
+                //GameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
             }
 
-            /* // Add Bubbles to every Grid block
-            for (int i = 0; i < rows; i++)
+            for (int j = 0; j < columns; j++)
             {
-                for (int j = 0; j < columns; j++)
-                {
-                    var bubble = new Bubble(columns, rows);
-                    bubbles.Add(bubble);
+                GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(cellSize, GridUnitType.Absolute) });
 
-                    GameBoard.Add(bubble.Button, j, i);
-                    Grid.SetColumn(bubble.Button, j);
-                    Grid.SetRow(bubble.Button, i);
-                }
+                //GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
             }
-            */
-            // Add Bubbles to random Grid blocks
+
+            GenerateBoard();
+            bwp_VM.Score = 0;
+            bwp_VM.TotalTime = 0;
+        }
+
+        private void GenerateBoard()
+        {
+            var tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += OnBubbleClicked;
+
             for (int i = 0; i < totalBubbles; i++)
             {
                 var bubble = new Bubble(columns, rows);
+                while (bubbles.Any(b => b.x == bubble.x && b.y == bubble.y))
+                {
+                    bubble.regenLoc(columns, rows);
+                }
+
+                if (SpinWheel())
+                {
+                    bubble.Marked = true;
+                }
                 bubbles.Add(bubble);
-                bubble.Button.Clicked += OnBubbleClicked;
-                GameBoard.Add(bubble.Button, bubble.x, bubble.y);
+                //bubble.Button.Clicked += OnBubbleClicked;
+                bubble.Button.GestureRecognizers.Add(tapGesture);
+                bubble.Button.ZIndex = 1;
+                GameBoard.Add(bubble.Button, bubble.y, bubble.x);
                 Grid.SetColumn(bubble.Button, bubble.y);
                 Grid.SetRow(bubble.Button, bubble.x);
             }
+            currentBubbles = totalBubbles;
+        }
 
-        } // Public BubbleWrapPopPage()
-
-        public async void OnBubbleClicked(object sender, EventArgs e)
+        public void ResetBoard()
         {
-            // The timer starts when you first click the bubble.
-            if (!_isTimerRunning)
+            GameBoard.Children.Clear();
+            bubbles.Clear();
+            GenerateBoard();
+        }
+
+        private async void OnBubbleClicked(object sender, EventArgs e)
+        {
+            bwp_VM.Score++;
+            //bwp_Score++;
+            // ScoreLbl.Text = $"Score: {bwp_Score}";
+            currentBubbles--;
+
+            // If bubble is marked, clear board and add remaining bubbles to score, then regenerate board
+            if (bubbles.Any(b => b.Button == sender && b.Marked))
             {
-                _stopwatch.Reset();
-                _stopwatch.Start();
-                _isTimerRunning = true;
+                bwp_VM.Score += currentBubbles;
+                // bwp_Score += currentBubbles;
+                // ScoreLbl.Text = $"Score: {bwp_Score}";
+                GameBoard.Children.Clear();
+                bubbles.Clear();
+                GenerateBoard();
             }
 
-            score++;
-            ScoreLbl.Text = $"Score: {score}";
-
-            // When the score equals the total number of bubbles, the round is considered over.
-            if (score >= totalBubbles)
+            if (currentBubbles == 0) // No more bubbles left
             {
-                // Stop the timer
-                _isTimerRunning = false;
-                _stopwatch.Stop();
-
-                sessionSeconds = (int)_stopwatch.Elapsed.TotalSeconds;
-
-                // Add the time taken for this round to the total Bubble time
-                totalTimeBubbleSeconds += sessionSeconds;
-
-                // If a user is logged in, write the time back to the User and update the database.
-                if (App.LoggedInUser != null)
+                if (Vibration.Default.IsSupported)
                 {
-                    App.LoggedInUser.TotalTimeBubbleSeconds = totalTimeBubbleSeconds;
-
-                    // Simultaneously update the total game time (Bubble + Dot)
-                    App.LoggedInUser.TotalTimePlayedSeconds =
-                        App.LoggedInUser.TotalTimeBubbleSeconds +
-                        App.LoggedInUser.TotalTimeDotSeconds+
-                        App.LoggedInUser.TotalTimePillSeconds;
-
-                    await App.Database.Update(App.LoggedInUser);
+                    Vibration.Default.Vibrate();
                 }
+                timer.Stop();
+                bwp_VM.TotalTime = bwp_GameTime;
+                bool playAgain = await DisplayAlert("Congrats!", $"You popped all the bubbles in {bwp_VM.TotalTime} seconds", "Play again?", "Go Home");
 
-                // Just pop up a prompt.
-                await DisplayAlert(
-                    "Great!",
-                    $"You popped all bubbles in {sessionSeconds} seconds.",
-                    "OK");
 
-                // (Optional) Reset a game: For now, just clear the score to zero. We'll modify it later if we want to restart from scratch.
-                score = 0;
-                ScoreLbl.Text = $"Score: {score}";
+                if (playAgain)
+                {
+                    timer.Start();
+                    ResetBoard();
+                    bwp_VM.Score = 0;
+                }
+                else
+                { // User doesn't want to play again
+                    if (bwp_VM.Score > bwp_VM.HighScore)
+                    {
+                        bwp_VM.HighScore = bwp_VM.Score;
+                    }
+                    // bwp_VM.TotalTime = bwp_TotalTime;
+                    isNavigatingHome = true;
+                    await Shell.Current.GoToAsync("///HomePage");
+                }
             }
+        }
+
+        private bool SpinWheel()
+        {
+            // Generate a random number from 1 to 10
+            Random random = new Random();
+            int spin = random.Next(1, 11);
+
+            if (spin == 1)
+            {
+                return true; // Mark Bubble
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            bwp_GameTime++;
+            bwp_VM.TotalTime = bwp_GameTime;
+            // TimerLbl.Text = $"Total Play Time: {bwp_GameTime}s";
+        }
+
+        // Overrides back button press to confirm with user if they want to go home
+        protected override bool OnBackButtonPressed()
+        {
+            if (isNavigatingHome)
+            {
+                // Goes back if it's been confirmed already
+                return base.OnBackButtonPressed();
+            }
+
+            Dispatcher.Dispatch(async () =>
+            {
+                await ConfirmGoHome();
+            });
+
+            return true; // Cancel default back navigation until user confirms
+        }
+
+        // Confirms with user if they want to go home
+        private async Task ConfirmGoHome()
+        {
+
+            timer.Stop();
+            bool confirm = await DisplayAlert("Are you sure you want to go home?", "This game will be lost.", "Yes", "No");
+            if (confirm)
+            {
+                isNavigatingHome = true;
+                await Shell.Current.GoToAsync("///HomePage");
+            }
+            timer.Start();
         }
     }
 }
