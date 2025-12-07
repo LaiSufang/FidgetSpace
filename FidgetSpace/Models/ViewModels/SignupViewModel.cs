@@ -15,12 +15,14 @@ namespace FidgetSpace.Models.ViewModels
         [ObservableProperty] string password;
         [ObservableProperty] string email;
         [ObservableProperty] string phone;
-        [ObservableProperty] string confirmpassword;
+        [ObservableProperty] string confirmPassword;
 
         public SignupViewModel()
         {
             _db = new DatabaseService();
         }
+
+        
 
         [RelayCommand]
         public async Task Signup()
@@ -106,16 +108,16 @@ namespace FidgetSpace.Models.ViewModels
                     "OK");
                 return;
             }
+            if (string.IsNullOrWhiteSpace(ConfirmPassword) ||
+                 Password?.Trim() != ConfirmPassword?.Trim())
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "Error",
+                    "Passwords do not match. Please try again.",
+                    "OK");
+                return;
+            }
 
-            // Confirm password check
-            //if (Password != ConfirmPassword)
-            //{
-            //    await Application.Current.MainPage.DisplayAlert(
-            //        "Error",
-            //        "Passwords do not match.",
-            //        "OK");
-            //    return;
-            //}
 
             // Email validation using regex
             var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
