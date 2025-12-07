@@ -16,7 +16,7 @@ namespace FidgetSpace.Models.ViewModels
         private readonly MusicService _musicService;
         private readonly DatabaseService _db;
 
-        public User CurrentUser => App.LoggedInUser; // user stored after login
+        public User CurrentUser => App.LoggedInUser;
 
         [ObservableProperty] private bool musicEnabled;
         [ObservableProperty] private double musicVolume;
@@ -29,13 +29,8 @@ namespace FidgetSpace.Models.ViewModels
             _db = db;
 
             if (CurrentUser == null)
-            {
-                // Debug or throw error
-                Debug.WriteLine("CurrentUser is null in SettingsViewModel");
                 return;
-            }
 
-            // Load user preferences
             MusicEnabled = CurrentUser.MusicEnabled;
             MusicVolume = CurrentUser.MusicVolume;
 
@@ -53,7 +48,6 @@ namespace FidgetSpace.Models.ViewModels
 
             await _db.Update(CurrentUser);
 
-            // Apply immediately
             if (MusicEnabled)
                 await _musicService.Play();
             else
@@ -61,7 +55,10 @@ namespace FidgetSpace.Models.ViewModels
 
             _musicService.SetVolume(MusicVolume);
 
-            await Application.Current.MainPage.DisplayAlert("Saved", "Preferences saved!", "OK");
+            await Application.Current.MainPage.DisplayAlert(
+                "Saved",
+                "Music settings saved!",
+                "OK");
         }
     }
 }

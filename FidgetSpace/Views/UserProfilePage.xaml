@@ -85,7 +85,18 @@
                     </Grid>
 
                     <BoxView HeightRequest="1" Color="#E0E0E0"/>
+                   
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="Connect the Dots Time (s)" TextColor="#555"/>
+                        <Label Text="{Binding User.TotalTimeDotSeconds}"
+                   Grid.Column="1"
+                   TextColor="#222"
+                   FontAttributes="Bold"/>
+                    </Grid>
+                    
 
+
+                    <BoxView HeightRequest="1" Color="#E0E0E0"/>
                     <Grid ColumnDefinitions="*, Auto">
                         <Label Text="Pill Game Time (s)" TextColor="#555"/>
                         <Label Text="{Binding User.TotalTimePillSeconds}"
@@ -94,16 +105,28 @@
                    FontAttributes="Bold"/>
                     </Grid>
 
-                    <BoxView HeightRequest="1" Color="#E0E0E0"/>
 
+                    <!-- Last Pill Duration -->
                     <Grid ColumnDefinitions="*, Auto">
-                        <Label Text="Connect the Dots Time (s)" TextColor="#555"/>
-                        <Label Text="{Binding User.TotalTimeDotSeconds}"
-                   Grid.Column="1"
-                   TextColor="#222"
-                   FontAttributes="Bold"/>
+                        <Label Text="Last Pill Duration (s)" />
+                        <Label Grid.Column="1"
+                        Text="{Binding LastGameDuration}" />
                     </Grid>
 
+                    <!-- Last Pill Choice -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="Last Pill Choice" />
+                        <Label Grid.Column="1"
+                         Text="{Binding LastPillChoice}" />
+                    </Grid>
+
+                    <!-- Last Game Played -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="Last Game Played" />
+                        <Label Grid.Column="1"
+                        Text="{Binding LastGamePlayed, StringFormat='{}{0:G}'}" />
+                    </Grid>
+                    
                 </VerticalStackLayout>
             </Frame>
 
