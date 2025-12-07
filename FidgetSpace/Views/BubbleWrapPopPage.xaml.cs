@@ -19,6 +19,17 @@ namespace FidgetSpace.Views
         BubbleWrapPopViewModel bwp_VM = new BubbleWrapPopViewModel();
         private bool isNavigatingHome = false; // Flag to raise alert on going back 
 
+        //  ==== Timing-Related ====
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private bool _isTimerRunning = false;
+
+        // Game Duration (seconds)
+        private int sessionSeconds = 0;
+
+        // Total cumulative seconds played across all Bubble games (read from the User database)
+        private int totalTimeBubbleSeconds = 0;
+
+
         public BubbleWrapPopPage()
         {
             InitializeComponent();

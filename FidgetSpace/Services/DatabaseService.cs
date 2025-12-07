@@ -10,7 +10,7 @@ namespace FidgetSpace.Services
 {
     public class DatabaseService
     {
-        private const string DB_NAME = "fidget-space.db3";
+        private const string DB_NAME = "fidget-space-v3.db3";
         private readonly SQLiteAsyncConnection _connection;
 
         public DatabaseService()

@@ -36,13 +36,18 @@
                    IsPassword="True"
                    HeightRequest="50"
                    />
+
+             <Entry Placeholder ="Confirm Password"
+                   IsPassword="True"
+                   Text="{Binding ConfirmPassword}" />
+            
             <Entry Placeholder="Email"
                 Text="{Binding Email}"
                 HeightRequest="50"
                 />
             <Entry Placeholder="Phone"
                 Text="{Binding Phone}"
-                IsPassword="True"
+               
                 HeightRequest="50"
                 />      
 

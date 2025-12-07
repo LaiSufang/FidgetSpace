@@ -13,16 +13,11 @@
             <Switch IsToggled="{Binding MusicEnabled}" />
             <Label Text="Enable Background Music" />
 
-            <Slider Minimum="0" Maximum="1"
-                Value="{Binding MusicVolume}" />
-
-            <Label Text="{Binding VolumeLabel}" />
-
             <Button Text="Save Preferences"
                 Command="{Binding SaveCommand}"
                 BackgroundColor="#1E3C72"
                 TextColor="White" />
 
-        </VerticalStackLayout>
-    </ContentPage>
+     </VerticalStackLayout>
+</ContentPage>
 

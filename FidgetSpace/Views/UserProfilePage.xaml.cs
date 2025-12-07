@@ -32,6 +32,7 @@ namespace FidgetSpace.Views
                 await DisplayAlert("Success", "Password updated!", "OK");
             }
         }
+       
 
     }
 }

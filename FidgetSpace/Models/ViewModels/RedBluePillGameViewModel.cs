@@ -3,11 +3,14 @@ using Microsoft.Maui.ApplicationModel;
 using System;
 using System.Diagnostics;
 using System.Timers;
+using FidgetSpace.Services;
 
 namespace FidgetSpace.Models.ViewModels
 {
     public partial class RedBluePillGameViewModel : ObservableObject, IDisposable
     {
+        private readonly DatabaseService _db;
+
         readonly Stopwatch stopwatch = new();
         readonly System.Timers.Timer timer = new(1000);
 
@@ -119,5 +122,6 @@ namespace FidgetSpace.Models.ViewModels
             if (stopwatch.IsRunning)
                 stopwatch.Stop();
         }
+       
     }
 }

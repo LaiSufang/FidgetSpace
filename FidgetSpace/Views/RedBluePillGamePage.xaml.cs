@@ -1,4 +1,4 @@
-using FidgetSpace.Models;
+ï»¿using FidgetSpace.Models;
 using FidgetSpace.Models.ViewModels;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -6,6 +6,9 @@ using Microsoft.Maui.Controls.Shapes;
 using System.Diagnostics;
 using System.Windows.Input;
 using FidgetSpace.Views;
+
+using FidgetSpace;          // App.LoggedInUser / App.Database
+using System.Threading.Tasks; //async Task
 
 namespace FidgetSpace.Views
 {
@@ -147,10 +150,10 @@ namespace FidgetSpace.Views
                 return;
 
             // if run out of time
-            if ( rbpGameTimerVm.RemainingSeconds<=0)
-            {
-                OnTimeExpired();
-            }
+           // if ( rbpGameTimerVm.RemainingSeconds<=0)
+            //{
+              //  OnTimeExpired();
+            //}
 
 
             // Check if the tapped pill is the target pill or black pill based on color choice
@@ -159,6 +162,8 @@ namespace FidgetSpace.Views
                 // red is found, stop timer
                 rbpGameTimerVm.Stop();
 
+                await SavePillTimeToUserAsync();   // save time for this round
+
                 // add vibration feedback
                 if (Vibration.Default.IsSupported)
                 {
@@ -166,7 +171,7 @@ namespace FidgetSpace.Views
                 }
 
                 ellipse.Fill = Colors.Black;
-                await DisplayAlert("The Black Pill?", "Oh… you weren’t supposed to find that. Game Over!!!", "OK");
+                await DisplayAlert("The Black Pill?", "Ohâ€¦ you werenâ€™t supposed to find that. Game Over!!!", "OK");
                 await Shell.Current.GoToAsync("///HomePage");
                 return;
             }
@@ -174,6 +179,8 @@ namespace FidgetSpace.Views
             {
                 // red is found, stop timer
                 rbpGameTimerVm.Stop();
+
+                await SavePillTimeToUserAsync();
 
                 // add vibration feedback
                 if (Vibration.Default.IsSupported)
@@ -197,6 +204,8 @@ namespace FidgetSpace.Views
                 // blue is found, stop timer
                 rbpGameTimerVm.Stop();
 
+                await SavePillTimeToUserAsync();
+
                 if (pos.Row == blackPillRow && pos.Col == blackPillColumn)
                 {
                     ellipse.Fill = Colors.Black;
@@ -205,7 +214,7 @@ namespace FidgetSpace.Views
                     {
                         Vibration.Default.Vibrate();
                     }
-                    await DisplayAlert("The Black Pill?", "Oh… you weren’t supposed to find that. Game Over!!!", "OK");
+                    await DisplayAlert("The Black Pill?", "Ohâ€¦ you werenâ€™t supposed to find that. Game Over!!!", "OK");
                     await Shell.Current.GoToAsync("///HomePage");
                     return;
                 }
@@ -235,17 +244,37 @@ namespace FidgetSpace.Views
             }
         }
 
+        // Accumulate the time spent playing the current round of Pill to the current user and update the total game time.
+        private async Task SavePillTimeToUserAsync()
+        {
+            if (App.LoggedInUser == null)
+                return;
+
+            // If the current game time is â‰¤ 0, it is not recorded.
+            if (rbpGameTimerVm.TimeSpentSeconds <= 0)
+                return;
+
+            // Accumulated session time (timing data in the ViewModel)
+            App.LoggedInUser.TotalTimePillSeconds += rbpGameTimerVm.TimeSpentSeconds;
+
+            // Recalculate total game time = Bubble + Dot + Pill
+            App.LoggedInUser.TotalTimePlayedSeconds =
+                App.LoggedInUser.TotalTimeBubbleSeconds +
+                App.LoggedInUser.TotalTimeDotSeconds +
+                App.LoggedInUser.TotalTimePillSeconds;
+
+            await App.Database.Update(App.LoggedInUser);
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            EpTarget.Fill = ColorChoice == "Red" ? new SolidColorBrush(Color.FromArgb("#FF6B6B")) : new SolidColorBrush(Color.FromArgb("#4D96FF"));
-            ;
 
-            var pillTime = ColorChoice == "Red" ? 10 : 30;
-            rbpGameTimerVm.Start(pillTime);
-
+            // Each time the page loads, reset the board and start a new game.
             StartGame();
 
+            // Start the countdown (There should be a Start method or similar in RedBluePillGameViewModel)
+            rbpGameTimerVm.Start(30);
         }
 
         protected override void OnDisappearing()
@@ -258,6 +287,8 @@ namespace FidgetSpace.Views
 
         async void OnTimeExpired()
         {
+            await SavePillTimeToUserAsync(); // Time must be recorded even when the time limit expires.
+
             bool playAgain = await DisplayAlert($"Time's up! You spent {rbpGameTimerVm.TimeSpentSeconds} seconds in this game!", "\n\nPlay again?", "Yes", "No");
             if (playAgain)
             {
