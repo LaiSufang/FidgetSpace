@@ -27,7 +27,7 @@
             <Label x:Name="LbColor" Text="Target Pill:" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
             <Ellipse x:Name="EpTarget" HeightRequest="20" WidthRequest="20" Fill="#4D96FF"/>
             <Label Text="Timer:" Margin="40,0,0,0" FontAttributes="Bold"/>
-            <Label x:Name="LbTimer" Text="{Binding TimeSpentSeconds, StringFormat='{0}   Seconds'}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
+            <Label x:Name="LbTimer" Text="{Binding RemainingSeconds, StringFormat='{0}   Seconds'}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
         </HorizontalStackLayout>
         <BoxView Color="AliceBlue" HeightRequest="2" WidthRequest="500"/>
         

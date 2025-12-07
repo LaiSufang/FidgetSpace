@@ -39,9 +39,9 @@ namespace FidgetSpace.Views
         readonly RedBluePillGameViewModel rbpGameTimerVm;
 
 
-        private async void NavigateBack()
+        private async Task NavigateBackAsync()
         {
-            await Shell.Current.GoToAsync(nameof(RedBluePillPage));
+            await Shell.Current.GoToAsync("..");
         }
 
         public RedBluePillGamePage()
@@ -189,10 +189,13 @@ namespace FidgetSpace.Views
                 }
 
                 ellipse.Fill = new SolidColorBrush(Color.FromArgb("#FF6B6B"));
-                bool playAgain = await DisplayAlert($"Wow~~Your found it in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Welcome to the real world...but this is only the beginning! \n\nPlay again?", "Yes", "No");
+                bool playAgain = await DisplayAlert($"Wow~~You found it in {rbpGameTimerVm.TimeSpentSeconds} seconds!",
+                                                    "Welcome to the real world...but this is only the beginning! \n\nPlay again?",
+                                                    "Yes", "No");
+
                 if (playAgain)
                 {
-                    NavigateBack();
+                    await NavigateBackAsync();   //  await
                 }
                 else
                 {
@@ -229,7 +232,7 @@ namespace FidgetSpace.Views
                     bool playAgain = await DisplayAlert($"Wow~~Your found the blue pill in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Enjoy the calm and peace you've chosen! \n\nPlay again?", "Yes", "No");
                     if (playAgain)
                     {
-                        NavigateBack();
+                        await NavigateBackAsync();
                     }
                     else
                     {
@@ -270,11 +273,27 @@ namespace FidgetSpace.Views
         {
             base.OnAppearing();
 
-            // Each time the page loads, reset the board and start a new game.
+            // Reset the board each time the page loads.
             StartGame();
 
-            // Start the countdown (There should be a Start method or similar in RedBluePillGameViewModel)
-            rbpGameTimerVm.Start(30);
+            // Select different countdown durations based on Red/Blue selection
+            int seconds;
+
+            if (ColorChoice == "Red")
+            {
+                seconds = 10;
+                // Target indicator dot changed to red (optional)
+                EpTarget.Fill = new SolidColorBrush(Color.FromArgb("#FF6B6B"));
+            }
+            else
+            {
+                seconds = 30;
+                // Default blue (optional, for greater clarity)
+                EpTarget.Fill = new SolidColorBrush(Color.FromArgb("#4D96FF"));
+            }
+
+            // 只调用一次 Start
+            rbpGameTimerVm.Start(seconds);
         }
 
         protected override void OnDisappearing()
@@ -292,7 +311,7 @@ namespace FidgetSpace.Views
             bool playAgain = await DisplayAlert($"Time's up! You spent {rbpGameTimerVm.TimeSpentSeconds} seconds in this game!", "\n\nPlay again?", "Yes", "No");
             if (playAgain)
             {
-                NavigateBack();
+                await NavigateBackAsync();
             }
             else
             {
