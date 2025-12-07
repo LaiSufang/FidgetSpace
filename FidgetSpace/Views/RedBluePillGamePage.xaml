@@ -13,7 +13,7 @@
                          VerticalOptions="Center"
                          HorizontalOptions="Center">
 
-        <!-- 🔙 Back button to return to the previous page (RedBluePillPage) -->
+        <!-- Back button to return to the previous page (RedBluePillPage) -->
         <Button Text="Back"
                 HeightRequest="40"
                 WidthRequest="100"

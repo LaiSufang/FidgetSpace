@@ -31,7 +31,7 @@ namespace FidgetSpace.Views
         // Total cumulative seconds played across all Bubble games (read from the User database)
         private int totalTimeBubbleSeconds = 0;
 
-        // ✅ Save bubble game time into user profile
+        // Save bubble game time into user profile
         private async Task SaveBubbleTimeToUserAsync()
         {
             // If no user is logged in, do nothing
@@ -42,16 +42,16 @@ namespace FidgetSpace.Views
             if (bwp_GameTime <= 0)
                 return;
 
-            // ✅ Add this round's Bubble time to the user's total bubble time
+            // Add this round's Bubble time to the user's total bubble time
             App.LoggedInUser.TotalTimeBubbleSeconds += bwp_GameTime;
 
-            // ✅ Recalculate total play time (Bubble + Dots + Pill)
+            // Recalculate total play time (Bubble + Dots + Pill)
             App.LoggedInUser.TotalTimePlayedSeconds =
                 App.LoggedInUser.TotalTimeBubbleSeconds +
                 App.LoggedInUser.TotalTimeDotSeconds +
                 App.LoggedInUser.TotalTimePillSeconds;
 
-            // ✅ Persist changes to the database
+            // Persist changes to the database
             await App.Database.Update(App.LoggedInUser);
         }
 
@@ -133,7 +133,7 @@ namespace FidgetSpace.Views
                 GenerateBoard();
             }
 
-            // ✅ When there are no bubbles left, the round is finished
+            // When there are no bubbles left, the round is finished
             if (currentBubbles == 0)
             {
                 if (Vibration.Default.IsSupported)
@@ -147,7 +147,7 @@ namespace FidgetSpace.Views
                 // Show the time used in this round
                 bwp_VM.TotalTime = bwp_GameTime;
 
-                // ✅ Save Bubble time from this round to the logged-in user
+                // Save Bubble time from this round to the logged-in user
                 await SaveBubbleTimeToUserAsync();
 
                 bool playAgain = await DisplayAlert(
@@ -158,7 +158,7 @@ namespace FidgetSpace.Views
 
                 if (playAgain)
                 {
-                    // ✅ Reset round data and play again
+                    // Reset round data and play again
                     bwp_GameTime = 0;          // reset seconds for new round
                     bwp_VM.TotalTime = 0;
                     currentBubbles = totalBubbles;
