@@ -1,7 +1,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FidgetSpace.Models.ViewModels"
-             x:Class="FidgetSpace.Views.Signin">
+             x:Class="FidgetSpace.Views.Signin"
+             Shell.NavBarIsVisible="False"
+             >
 
     <ContentPage.BindingContext>
         <viewmodels:LoginViewModel/>
@@ -11,43 +13,51 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#3A1C71" Offset="0.0"/>
-                <GradientStop Color="#D76D77" Offset="0.5"/>
-                <GradientStop Color="#FFAF7B" Offset="1.0"/>
+                <GradientStop Color="MediumSlateBlue" Offset="0.0"/>
+                <!--<GradientStop Color="#FF6B6B" Offset="0.5"/>-->
+                <GradientStop Color="CadetBlue" Offset="1.0"/>
             </LinearGradientBrush>
         </Grid.Background>
 
-        <VerticalStackLayout VerticalOptions="Center" Spacing="15">
+        <VerticalStackLayout VerticalOptions="Center" Spacing="30">
 
-            <Label Text="GAME LOGIN"
+            <Label Text="Fidget Space"
                    HorizontalOptions="Center"
-                   FontSize="32"
+                   FontSize="40"
                    TextColor="White"
-                   FontAttributes="Bold"/>
+                   FontAttributes="Bold"/>  
+            <Label Text="LOGIN"
+                   HorizontalOptions="Center"
+                   FontSize="24"
+                   TextColor="White"/>
 
             <Entry Placeholder="Username"
                    Text="{Binding Username}"
-                   BackgroundColor="White"
+                   
                    HeightRequest="50"
                    />
 
             <Entry Placeholder="Password"
                    Text="{Binding Password}"
                    IsPassword="True"
-                   BackgroundColor="White"
+                   
                    HeightRequest="50"
                    />
 
             <Button Text="Login"
                     Command="{Binding LoginCommand}"
-                    BackgroundColor="#3A1C71"
+                    BackgroundColor="MediumSlateBlue"
                     TextColor="White"
-                   
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Margin="0,50,0,0"
                     HeightRequest="50"/>
 
             <Button Text="Create account"
                     Command="{Binding GoToSignupCommand}"
                     BackgroundColor="Transparent"
+                    FontAttributes="Bold"
+                    FontSize="Medium"
                     TextColor="White"/>
         </VerticalStackLayout>
     </Grid>

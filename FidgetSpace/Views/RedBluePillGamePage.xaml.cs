@@ -1,7 +1,14 @@
-using FidgetSpace.Models;
+ï»¿using FidgetSpace.Models;
+using FidgetSpace.Models.ViewModels;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
+using System.Diagnostics;
 using System.Windows.Input;
+using FidgetSpace.Views;
+
+using FidgetSpace;          // App.LoggedInUser / App.Database
+using System.Threading.Tasks; //async Task
 
 namespace FidgetSpace.Views
 {
@@ -18,11 +25,19 @@ namespace FidgetSpace.Views
         int totalPills = 0;
         private Random ran = new Random();
         public string? ColorChoice { get; set; }
-        public ICommand BackCommand => new Command(NavigateBack); // command to navigate back
+        //public ICommand BackCommand => new Command(NavigateBack); // command to navigate back
 
         // set target pill position based on color choice
         private int targetRow = -1;
         private int targetColumn = -1;
+
+        // black pill position
+        private int blackPillRow = -1;
+        private int blackPillColumn = -1;
+
+        // Countdown timer vm
+        readonly RedBluePillGameViewModel rbpGameTimerVm;
+
 
         private async void NavigateBack()
         {
@@ -32,7 +47,13 @@ namespace FidgetSpace.Views
         public RedBluePillGamePage()
         {
             InitializeComponent();
-            BindingContext = this;
+            //BindingContext = this;
+
+            rbpGameTimerVm = new RedBluePillGameViewModel();
+            BindingContext = rbpGameTimerVm;
+
+            // subscribe to time expired event so the page reacts when time is up
+            rbpGameTimerVm.TimeExpired += OnTimeExpired;
 
             // create game board rows and columns
             for (int i = 0; i < GridRows; i++)
@@ -82,17 +103,20 @@ namespace FidgetSpace.Views
             var colorList = new List<Color>
         {
             Colors.MistyRose,
-            Colors.Purple,
+            Colors.PaleTurquoise,
             Colors.Pink,
             Colors.Orange,
             Colors.Orchid,
             Colors.Cyan,
             Colors.Lime,
-            Colors.Magenta,
+            Colors.Beige,
             Colors.Turquoise,
             Colors.Gold,
             Colors.GreenYellow,
-            Colors.Lavender,
+            Colors.Khaki,
+            Colors.MediumPurple,
+            Colors.CadetBlue,
+            Colors.Teal,
         };
             int index = ran.Next(colorList.Count);
             return new SolidColorBrush(colorList[index]);
@@ -109,6 +133,14 @@ namespace FidgetSpace.Views
             // randomly select target pill position 
             targetRow = ran.Next(0, GridRows);
             targetColumn = ran.Next(0, GridColumns);
+
+            // randomly generate a black pill position that is not the target pill
+            do
+            {
+                blackPillRow = ran.Next(0, GridRows);
+                blackPillColumn = ran.Next(0, GridColumns);
+            } while (blackPillRow == targetRow && blackPillColumn == targetColumn);
+
         }
         private async void OnPillTapped(Ellipse ellipse)
         {
@@ -117,11 +149,47 @@ namespace FidgetSpace.Views
             if (!pillPositions.TryGetValue(ellipse, out var pos))
                 return;
 
-            // Check if the tapped pill is the target pill based on color choice
+            // if run out of time
+           // if ( rbpGameTimerVm.RemainingSeconds<=0)
+            //{
+              //  OnTimeExpired();
+            //}
+
+
+            // Check if the tapped pill is the target pill or black pill based on color choice
+            if (pos.Row == blackPillRow && pos.Col == blackPillColumn)
+            {
+                // red is found, stop timer
+                rbpGameTimerVm.Stop();
+
+                await SavePillTimeToUserAsync();   // save time for this round
+
+                // add vibration feedback
+                if (Vibration.Default.IsSupported)
+                {
+                    Vibration.Default.Vibrate();
+                }
+
+                ellipse.Fill = Colors.Black;
+                await DisplayAlert("The Black Pill?", "Ohâ€¦ you werenâ€™t supposed to find that. Game Over!!!", "OK");
+                await Shell.Current.GoToAsync("///HomePage");
+                return;
+            }
             if (ColorChoice == "Red" && (pos.Row == targetRow && pos.Col == targetColumn))
             {
-                ellipse.Fill = Colors.Red;
-                bool playAgain = await DisplayAlert("Result", "You made the right choice! Play again?", "Yes", "No");
+                // red is found, stop timer
+                rbpGameTimerVm.Stop();
+
+                await SavePillTimeToUserAsync();
+
+                // add vibration feedback
+                if (Vibration.Default.IsSupported)
+                {
+                    Vibration.Default.Vibrate();
+                }
+
+                ellipse.Fill = new SolidColorBrush(Color.FromArgb("#FF6B6B"));
+                bool playAgain = await DisplayAlert($"Wow~~Your found it in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Welcome to the real world...but this is only the beginning! \n\nPlay again?", "Yes", "No");
                 if (playAgain)
                 {
                     NavigateBack();
@@ -130,46 +198,107 @@ namespace FidgetSpace.Views
                 {
                     await Shell.Current.GoToAsync("///HomePage");
                 }
-
             }
             else if (ColorChoice == "Blue" && (pos.Row == targetRow && pos.Col == targetColumn))
             {
-                ellipse.Fill = Colors.Blue;
-                bool playAgain = await DisplayAlert("Result", "You made the right choice! Play again?", "Yes", "No");
-                if (playAgain)
+                // blue is found, stop timer
+                rbpGameTimerVm.Stop();
+
+                await SavePillTimeToUserAsync();
+
+                if (pos.Row == blackPillRow && pos.Col == blackPillColumn)
                 {
-                    NavigateBack();
+                    ellipse.Fill = Colors.Black;
+                    // add vibration feedback
+                    if (Vibration.Default.IsSupported)
+                    {
+                        Vibration.Default.Vibrate();
+                    }
+                    await DisplayAlert("The Black Pill?", "Ohâ€¦ you werenâ€™t supposed to find that. Game Over!!!", "OK");
+                    await Shell.Current.GoToAsync("///HomePage");
+                    return;
                 }
                 else
                 {
-                    await Shell.Current.GoToAsync("///HomePage");
+                    ellipse.Fill = new SolidColorBrush(Color.FromArgb("#4D96FF"));
+                    // add vibration feedback
+                    if (Vibration.Default.IsSupported)
+                    {
+                        Vibration.Default.Vibrate();
+                    }
+                    bool playAgain = await DisplayAlert($"Wow~~Your found the blue pill in {rbpGameTimerVm.TimeSpentSeconds} seconds!", "Enjoy the calm and peace you've chosen! \n\nPlay again?", "Yes", "No");
+                    if (playAgain)
+                    {
+                        NavigateBack();
+                    }
+                    else
+                    {
+                        await Shell.Current.GoToAsync("///HomePage");
+                    }
                 }
             }
             else
             {
                 ellipse.Fill = GetRandomColor();
-                // when time runs out, display result: 
-
-                //await DisplayAlert("Result", "Accept the Truth! You’ve got a colorful world anyway.", "OK");
+                ellipse.GestureRecognizers.Clear(); // disable further taps on this pill
             }
-            // prompt the player to play again or exit
-            //bool playAgain = await DisplayAlert("Play Again?", "Do you want to play again?", "Yes", "No");
+        }
 
+        // Accumulate the time spent playing the current round of Pill to the current user and update the total game time.
+        private async Task SavePillTimeToUserAsync()
+        {
+            if (App.LoggedInUser == null)
+                return;
 
-            // TODO: If the black pill is found, the game ends immediately and displays:“Oops! Life happens - you’re poisoned!” The player can choose to continue the next session or not. 
+            // If the current game time is â‰¤ 0, it is not recorded.
+            if (rbpGameTimerVm.TimeSpentSeconds <= 0)
+                return;
 
+            // Accumulated session time (timing data in the ViewModel)
+            App.LoggedInUser.TotalTimePillSeconds += rbpGameTimerVm.TimeSpentSeconds;
+
+            // Recalculate total game time = Bubble + Dot + Pill
+            App.LoggedInUser.TotalTimePlayedSeconds =
+                App.LoggedInUser.TotalTimeBubbleSeconds +
+                App.LoggedInUser.TotalTimeDotSeconds +
+                App.LoggedInUser.TotalTimePillSeconds;
+
+            await App.Database.Update(App.LoggedInUser);
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            LbColor.Text += ColorChoice;
 
+            // Each time the page loads, reset the board and start a new game.
             StartGame();
 
-            // TODO: Start a countdown timer of 10 seconds for the game session
+            // Start the countdown (There should be a Start method or similar in RedBluePillGameViewModel)
+            rbpGameTimerVm.Start(30);
         }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            rbpGameTimerVm.Stop();
+            rbpGameTimerVm.TimeExpired -= OnTimeExpired;
 
+        }
+
+        async void OnTimeExpired()
+        {
+            await SavePillTimeToUserAsync(); // Time must be recorded even when the time limit expires.
+
+            bool playAgain = await DisplayAlert($"Time's up! You spent {rbpGameTimerVm.TimeSpentSeconds} seconds in this game!", "\n\nPlay again?", "Yes", "No");
+            if (playAgain)
+            {
+                NavigateBack();
+            }
+            else
+            {
+                await Shell.Current.GoToAsync("///HomePage");
+            }
+            return;
+        }
     }
 }
