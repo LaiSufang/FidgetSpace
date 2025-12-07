@@ -16,26 +16,6 @@ namespace FidgetSpace.Views
             BindingContext = new UserProfileViewModel(userLoginInfo);
         }
 
-        private async void OnChangePasswordTapped(object sender, EventArgs e)
-        {
-            string newPass = await DisplayPromptAsync(
-                "Change Password",
-                "Enter new password:",
-                "Save",
-                "Cancel");
-
-            if (!string.IsNullOrEmpty(newPass))
-            {
-                var vm = (UserProfileViewModel)BindingContext;
-
-                // Update password in memory
-                vm.User.Password = newPass;
-
-                // Save to database
-                await App.Database.Update(vm.User);
-
-                await DisplayAlert("Success", "Password updated!", "OK");
-            }
-        }
+       
     }
 }

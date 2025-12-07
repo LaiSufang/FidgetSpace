@@ -7,10 +7,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
 using FidgetSpace.Services;
+using FidgetSpace.Models;
 
 
 namespace FidgetSpace.Models.ViewModels
 {
+    
     public partial class SettingsViewModel : ObservableObject
     {
         private readonly MusicService _musicService;
@@ -20,6 +22,7 @@ namespace FidgetSpace.Models.ViewModels
 
         [ObservableProperty] private bool musicEnabled;
         [ObservableProperty] private double musicVolume;
+        
 
         public string VolumeLabel => $"Volume: {(int)(MusicVolume * 100)}%";
 

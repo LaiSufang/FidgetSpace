@@ -130,25 +130,7 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- SECTION: Security -->
-            <Label Text="Security"
-                   FontSize="18"
-                   FontAttributes="Bold"
-                   TextColor="#4A3AFF"/>
-
-            <Frame CornerRadius="12"
-                   BackgroundColor="#F7F7FB"
-                   Padding="15">
-
-                <Grid ColumnDefinitions="*, Auto">
-                    <Label Text="Password" TextColor="#555"/>
-                    <Label Text="Tap to change"
-                           Grid.Column="1"
-                           TextColor="#4A3AFF"
-                           FontAttributes="Bold"/>
-                </Grid>
-
-            </Frame>
+            
 
         </VerticalStackLayout>
     </ScrollView>
